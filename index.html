@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Boletim de Ocorrência</title>
+    <title>Sistema de Boletim de Ocorrência - 17º BPM</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -20,64 +21,66 @@
             color: #333;
             line-height: 1.6;
             padding: 20px;
+            font-size: 14px;
+            min-height: 100vh;
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
         
         header {
             background-color: #0a3d62;
             color: white;
-            padding: 20px;
+            padding: 25px;
             text-align: center;
             border-bottom: 5px solid #f9ca24;
         }
         
         header h1 {
-            font-size: 1.8rem;
+            font-size: 2rem;
             margin-bottom: 10px;
         }
         
         header p {
-            font-size: 1rem;
+            font-size: 1.1rem;
             opacity: 0.9;
         }
         
         .app-content {
             display: flex;
-            flex-wrap: wrap;
-            min-height: 600px;
+            min-height: 700px;
         }
         
         .form-section {
             flex: 1;
-            min-width: 300px;
-            padding: 25px;
+            min-width: 450px;
+            padding: 30px;
             background-color: #f9f9f9;
             border-right: 1px solid #e0e0e0;
+            overflow-y: auto;
         }
         
         .preview-section {
             flex: 1;
-            min-width: 300px;
-            padding: 25px;
+            min-width: 450px;
+            padding: 30px;
             background-color: #fff;
-            overflow-y: auto;
-            max-height: 750px;
+            display: flex;
+            flex-direction: column;
         }
         
         .section-title {
             color: #0a3d62;
-            border-bottom: 2px solid #f9ca24;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            font-size: 1.3rem;
+            border-bottom: 3px solid #f9ca24;
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+            font-size: 1.4rem;
             display: flex;
             align-items: center;
         }
@@ -95,49 +98,54 @@
             margin-bottom: 8px;
             font-weight: 500;
             color: #555;
+            font-size: 15px;
         }
         
         input, select, textarea {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
+            border-radius: 6px;
+            font-size: 15px;
             transition: border 0.3s;
         }
         
         input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: #0a3d62;
-            box-shadow: 0 0 0 2px rgba(10, 61, 98, 0.2);
+            box-shadow: 0 0 0 3px rgba(10, 61, 98, 0.2);
         }
         
         textarea {
             resize: vertical;
             min-height: 120px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
         }
         
         .form-row {
             display: flex;
-            gap: 15px;
+            gap: 20px;
+            margin-bottom: 20px;
         }
         
         .form-row .form-group {
             flex: 1;
+            margin-bottom: 0;
         }
         
         .button-group {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             margin-top: 30px;
             justify-content: center;
             flex-wrap: wrap;
         }
         
         button {
-            padding: 12px 20px;
+            padding: 14px 24px;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             font-weight: 500;
             font-size: 15px;
@@ -145,7 +153,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
+            min-width: 160px;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.15);
         }
         
         .btn-primary {
@@ -155,8 +169,6 @@
         
         .btn-primary:hover {
             background-color: #083354;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
         }
         
         .btn-secondary {
@@ -166,8 +178,6 @@
         
         .btn-secondary:hover {
             background-color: #f7b731;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
         }
         
         .btn-success {
@@ -177,8 +187,6 @@
         
         .btn-success:hover {
             background-color: #219653;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
         }
         
         .btn-danger {
@@ -188,8 +196,6 @@
         
         .btn-danger:hover {
             background-color: #c0392b;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
         }
         
         .btn-info {
@@ -199,35 +205,59 @@
         
         .btn-info:hover {
             background-color: #2980b9;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
         }
         
-        .pdf-preview {
-            border: 1px solid #ddd;
-            border-radius: 4px;
+        .pdf-preview-container {
+            border: 2px solid #ddd;
+            border-radius: 8px;
             background-color: white;
-            padding: 20px;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            line-height: 1.4;
-            white-space: pre-wrap;
-            height: 600px;
-            overflow-y: auto;
+            padding: 15px;
+            flex: 1;
+            overflow: auto;
+            background-color: #f8f8f8;
+            margin-bottom: 20px;
         }
         
-        .boletim-header {
+        #pdf-preview-content {
+            width: 100%;
+            background: white;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            line-height: 1.3;
+            margin: 0 auto;
+            padding: 25px;
+            box-sizing: border-box;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border: 1px solid #ccc;
+        }
+        
+        .bo-model {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        
+        .bo-model td {
+            border: 1px solid #000;
+            padding: 4px;
+            vertical-align: top;
+            height: 20px;
+            overflow: hidden;
+            font-size: 11px;
+            line-height: 1.3;
+        }
+        
+        .bo-header {
             text-align: center;
             font-weight: bold;
-            margin-bottom: 20px;
-            font-size: 16px;
+            border: none !important;
+            padding: 5px 0 !important;
+            font-size: 12px;
         }
         
-        .form-note {
-            font-size: 14px;
-            color: #666;
-            margin-top: 5px;
-            font-style: italic;
+        .bo-title {
+            font-weight: bold;
+            background-color: #f0f0f0;
         }
         
         .required::after {
@@ -237,8 +267,8 @@
         
         .tabs {
             display: flex;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #ddd;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #ddd;
             flex-wrap: wrap;
         }
         
@@ -249,15 +279,16 @@
             border: 1px solid #ddd;
             border-bottom: none;
             margin-right: 5px;
-            border-radius: 5px 5px 0 0;
+            border-radius: 6px 6px 0 0;
             white-space: nowrap;
+            font-size: 15px;
         }
         
         .tab.active {
             background-color: white;
             font-weight: 500;
-            border-bottom: 1px solid white;
-            margin-bottom: -1px;
+            border-bottom: 2px solid white;
+            margin-bottom: -2px;
         }
         
         .tab-content {
@@ -268,12 +299,12 @@
             display: block;
         }
         
-        .accused-row, .victim-row, .witness-row {
+        .person-row {
             background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            border-left: 4px solid #0a3d62;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 5px solid #0a3d62;
             position: relative;
         }
         
@@ -292,60 +323,77 @@
         .add-btn {
             background-color: #27ae60;
             color: white;
-            padding: 10px 15px;
-            border-radius: 4px;
+            padding: 12px 20px;
+            border-radius: 6px;
             border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-top: 10px;
+            gap: 10px;
+            margin-top: 15px;
             width: 100%;
             justify-content: center;
+            font-size: 15px;
+        }
+        
+        .add-btn:hover {
+            background-color: #219653;
+            transform: translateY(-2px);
         }
         
         .add-btn.accused {
             background-color: #c0392b;
         }
         
+        .add-btn.accused:hover {
+            background-color: #a93226;
+        }
+        
         .remove-btn {
             background-color: #e74c3c;
             color: white;
-            padding: 8px 12px;
-            border-radius: 4px;
+            padding: 8px 15px;
+            border-radius: 5px;
             border: none;
             cursor: pointer;
             font-size: 14px;
             margin-top: 10px;
         }
         
+        .remove-btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+        
         .row-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
-            padding-bottom: 5px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
             border-bottom: 1px solid #ddd;
         }
         
         .row-title {
             font-weight: 500;
             color: #0a3d62;
+            font-size: 16px;
         }
         
         .save-status {
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: 10px 15px;
-            border-radius: 4px;
+            padding: 15px 20px;
+            border-radius: 6px;
             background-color: #27ae60;
             color: white;
             font-weight: 500;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             z-index: 1000;
             opacity: 0;
             transition: opacity 0.3s;
+            font-size: 15px;
         }
         
         .save-status.show {
@@ -356,7 +404,37 @@
             background-color: #e74c3c;
         }
         
-        @media (max-width: 768px) {
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 8px;
+        }
+        
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: normal;
+            margin-bottom: 0;
+            font-size: 14px;
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 8px;
+        }
+        
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: normal;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 1200px) {
             .app-content {
                 flex-direction: column;
             }
@@ -368,21 +446,45 @@
             
             .form-row {
                 flex-direction: column;
-                gap: 0;
+                gap: 15px;
+            }
+            
+            button {
+                min-width: 140px;
+                padding: 12px 18px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                border-radius: 8px;
+            }
+            
+            header {
+                padding: 15px;
+            }
+            
+            header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .form-section, .preview-section {
+                padding: 20px;
+                min-width: 100%;
+            }
+            
+            button {
+                min-width: 120px;
+                padding: 10px 15px;
+                font-size: 14px;
             }
             
             .tabs {
                 overflow-x: auto;
-            }
-            
-            .tab {
-                padding: 10px 15px;
-                font-size: 14px;
-            }
-            
-            .button-group button {
-                padding: 10px 15px;
-                font-size: 14px;
             }
         }
         
@@ -392,8 +494,33 @@
             background-color: #f1f1f1;
             color: #666;
             font-size: 14px;
-            margin-top: 30px;
             border-top: 1px solid #ddd;
+        }
+        
+        .form-section::-webkit-scrollbar,
+        .preview-section::-webkit-scrollbar,
+        .pdf-preview-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .form-section::-webkit-scrollbar-track,
+        .preview-section::-webkit-scrollbar-track,
+        .pdf-preview-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        .form-section::-webkit-scrollbar-thumb,
+        .preview-section::-webkit-scrollbar-thumb,
+        .pdf-preview-container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        
+        .form-section::-webkit-scrollbar-thumb:hover,
+        .preview-section::-webkit-scrollbar-thumb:hover,
+        .pdf-preview-container::-webkit-scrollbar-thumb:hover {
+            background: #555;
         }
     </style>
 </head>
@@ -420,59 +547,94 @@
                     
                     <div class="form-row">
                         <div class="form-group">
+                            <label for="bo-num" class="required">Nº BO</label>
+                            <input type="text" id="bo-num" placeholder="Número do BO" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ciop">Nº CIOP</label>
+                            <input type="text" id="ciop" placeholder="Número CIOP">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="uop">UOp/SUOp</label>
+                            <input type="text" id="uop" placeholder="Unidade Operacional">
+                        </div>
+                        <div class="form-group">
                             <label for="data" class="required">Data</label>
                             <input type="date" id="data" required>
                         </div>
+                    </div>
+                    
+                    <div class="form-row">
                         <div class="form-group">
                             <label for="hora" class="required">Hora</label>
                             <input type="time" id="hora" required>
                         </div>
                     </div>
                     
+                    <div class="form-group">
+                        <label for="endereco">Endereço da Ocorrência</label>
+                        <input type="text" id="endereco" placeholder="Rua, Bairro, Cidade e Nº">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ponto-ref">Ponto de Referência</label>
+                        <input type="text" id="ponto-ref" placeholder="Ponto de referência">
+                    </div>
+                    
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="vtr">Viatura</label>
-                            <input type="text" id="vtr" placeholder="Ex: PM-1234">
+                            <label for="natureza">Natureza da Ocorrência</label>
+                            <input type="text" id="natureza" placeholder="Natureza da ocorrência">
                         </div>
                         <div class="form-group">
-                            <label for="cmt">Comandante</label>
-                            <input type="text" id="cmt" placeholder="Nome do comandante">
+                            <label for="codigo">Código da Ocorrência</label>
+                            <input type="text" id="codigo" placeholder="Código">
                         </div>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="solicitante">Solicitante</label>
-                            <input type="text" id="solicitante" placeholder="Nome do solicitante">
+                            <label for="comandante">Comandante da Guarnição</label>
+                            <input type="text" id="comandante" placeholder="Nome, Posto/Grad. e Matrícula">
                         </div>
                         <div class="form-group">
-                            <label for="mat-solicitante">MAT.</label>
-                            <input type="text" id="mat-solicitante" placeholder="Matrícula do solicitante">
+                            <label for="viatura">Prefixo da Viatura</label>
+                            <input type="text" id="viatura" placeholder="Prefix da viatura">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="motorista">Motorista</label>
+                            <input type="text" id="motorista" placeholder="Nome, Grad. e Matrícula">
+                        </div>
+                        <div class="form-group">
+                            <label for="patrulheiro1">Patrulheiro 01</label>
+                            <input type="text" id="patrulheiro1" placeholder="Nome, Grad. e Matrícula">
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="endereco">Endereço da Ocorrência</label>
-                        <input type="text" id="endereco" placeholder="Endereço completo">
+                        <label for="patrulheiro2">Patrulheiro 02</label>
+                        <input type="text" id="patrulheiro2" placeholder="Nome, Grad. e Matrícula">
                     </div>
                     
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="telefone">Telefone</label>
-                            <input type="tel" id="telefone" placeholder="(83) 99999-9999">
-                        </div>
-                        <div class="form-group">
-                            <label for="classe">Classe da Ocorrência</label>
-                            <select id="classe">
-                                <option value="">Selecione</option>
-                                <option value="Roubo">Roubo</option>
-                                <option value="Furto">Furto</option>
-                                <option value="Ameaça">Ameaça</option>
-                                <option value="Lesão Corporal">Lesão Corporal</option>
-                                <option value="Tráfico">Tráfico</option>
-                                <option value="Outros">Outros</option>
-                            </select>
-                        </div>
+                    <div class="form-group">
+                        <label for="solicitante">Solicitante</label>
+                        <input type="text" id="solicitante" placeholder="Nome completo do solicitante">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tel-solicitante">Telefone(s) do Solicitante</label>
+                        <input type="text" id="tel-solicitante" placeholder="Número do(s) telefone(s)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="end-solicitante">Endereço do Solicitante</label>
+                        <input type="text" id="end-solicitante" placeholder="Rua, Nº, Bairro, Cidade e UF">
                     </div>
                 </div>
                 
@@ -510,20 +672,60 @@
                     <h3 class="section-title"><i class="fas fa-box-open"></i> Objetos Apreendidos</h3>
                     
                     <div class="form-group">
-                        <label for="objetos">Descrição dos Objetos Apreendidos</label>
-                        <textarea id="objetos" placeholder="Descreva detalhadamente os objetos apreendidos..."></textarea>
-                        <div class="form-note">Separe cada objeto com ponto e vírgula (;)</div>
+                        <label>Armas de Fogo Apreendidas</label>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="arma-tipo">Tipo</label>
+                                <input type="text" id="arma-tipo" placeholder="Tipo">
+                            </div>
+                            <div class="form-group">
+                                <label for="arma-marca">Marca</label>
+                                <input type="text" id="arma-marca" placeholder="Marca">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="arma-calibre">Calibre</label>
+                                <input type="text" id="arma-calibre" placeholder="Calibre">
+                            </div>
+                            <div class="form-group">
+                                <label for="arma-acabamento">Acabamento</label>
+                                <input type="text" id="arma-acabamento" placeholder="Acabamento">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="arma-serie">Nº de Série</label>
+                                <input type="text" id="arma-serie" placeholder="Nº de Série">
+                            </div>
+                            <div class="form-group">
+                                <label for="arma-cano">Dimensão do Cano</label>
+                                <input type="text" id="arma-cano" placeholder="Dimensão do Cano">
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="posto-grad">Posto/Graduação</label>
-                            <input type="text" id="posto-grad" placeholder="Ex: 2º SGT">
+                    <div class="form-group">
+                        <label>Cartuchos Apreendidos</label>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cart-quantidade">Quantidade</label>
+                                <input type="text" id="cart-quantidade" placeholder="Quantidade">
+                            </div>
+                            <div class="form-group">
+                                <label for="cart-calibre">Calibre</label>
+                                <input type="text" id="cart-calibre" placeholder="Calibre">
+                            </div>
+                            <div class="form-group">
+                                <label for="cart-tipo">Tipo</label>
+                                <input type="text" id="cart-tipo" placeholder="Tipo">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="matricula">Matrícula</label>
-                            <input type="text" id="matricula" placeholder="Ex: 528 887.8">
-                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="outros-obj">Outros Objetos Apreendidos</label>
+                        <textarea id="outros-obj" placeholder="Descrição de outros objetos apreendidos"></textarea>
                     </div>
                 </div>
                 
@@ -533,18 +735,55 @@
                     <div class="form-group">
                         <label for="relato" class="required">Relato Detalhado</label>
                         <textarea id="relato" placeholder="Descreva detalhadamente o ocorrido..." required></textarea>
-                        <div class="form-note">Descreva todos os fatos relevantes da ocorrência de forma clara e objetiva.</div>
+                    </div>
+                    
+                    <h4 class="section-title"><i class="fas fa-file-signature"></i> Auto de Resistência à Prisão</h4>
+                    
+                    <div class="form-group">
+                        <label for="auto-matricula">PM Matrícula</label>
+                        <input type="text" id="auto-matricula" placeholder="Matrícula do PM">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="auto-acusado">Nome do Acusado</label>
+                        <input type="text" id="auto-acusado" placeholder="Nome do acusado">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="auto-crime">Crime/Contravenção</label>
+                        <input type="text" id="auto-crime" placeholder="Descrição do crime/contravenção">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="auto-meio">Meio Utilizado</label>
+                        <input type="text" id="auto-meio" placeholder="Meio utilizado para contenção">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="auto-resultado">Resultado</label>
+                        <input type="text" id="auto-resultado" placeholder="Resultado da ação">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="auto-test1">1ª Testemunha</label>
+                            <input type="text" id="auto-test1" placeholder="Nome da 1ª testemunha">
+                        </div>
+                        <div class="form-group">
+                            <label for="auto-test2">2ª Testemunha</label>
+                            <input type="text" id="auto-test2" placeholder="Nome da 2ª testemunha">
+                        </div>
                     </div>
                 </div>
                 
                 <div class="button-group">
                     <button type="button" class="btn-success" id="save-local">
-                        <i class="fas fa-save"></i> Salvar Localmente
+                        <i class="fas fa-save"></i> Salvar
                     </button>
                     <button type="button" class="btn-info" id="load-local">
-                        <i class="fas fa-folder-open"></i> Carregar Dados
+                        <i class="fas fa-folder-open"></i> Carregar
                     </button>
-                    <button type="button" class="btn-secondary" id="clear-form">
+                    <button type="button" class="btn-danger" id="clear-form">
                         <i class="fas fa-eraser"></i> Limpar
                     </button>
                     <button type="button" class="btn-primary" id="generate-pdf">
@@ -555,10 +794,12 @@
             
             <div class="preview-section">
                 <h3 class="section-title"><i class="fas fa-eye"></i> Visualização do Boletim</h3>
-                <div class="pdf-preview" id="pdf-preview">
-                    <!-- O conteúdo do preview será gerado dinamicamente -->
+                <div class="pdf-preview-container">
+                    <div id="pdf-preview-content">
+                        <!-- O template do PDF será gerado aqui -->
+                    </div>
                 </div>
-                <div class="button-group" style="margin-top: 20px;">
+                <div class="button-group" style="margin-top: 0; border-top: none;">
                     <button type="button" class="btn-secondary" id="update-preview">
                         <i class="fas fa-sync-alt"></i> Atualizar Visualização
                     </button>
@@ -568,7 +809,7 @@
         
         <footer>
             <p>Sistema desenvolvido para o 17º Batalhão de Polícia Militar da Paraíba</p>
-            <p>© 2023 - Todos os direitos reservados | Dados salvos localmente no navegador</p>
+            <p>© 2023 - Todos os direitos reservados</p>
         </footer>
     </div>
 
@@ -585,14 +826,10 @@
         // Função para alternar entre abas
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', () => {
-                // Remove a classe active de todas as abas
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
                 document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
                 
-                // Adiciona a classe active à aba clicada
                 tab.classList.add('active');
-                
-                // Mostra o conteúdo correspondente
                 const tabId = tab.getAttribute('data-tab');
                 document.getElementById(`${tabId}-tab`).classList.add('active');
             });
@@ -610,25 +847,36 @@
             }, 3000);
         }
         
-        // Função para criar um novo acusado
+        // Função para formatar data
+        function formatDate(dateString) {
+            if (!dateString) return "";
+            const date = new Date(dateString);
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+        
+        // Função para formatar hora
+        function formatTime(timeString) {
+            if (!timeString) return "";
+            return timeString.substring(0, 5);
+        }
+        
+        // Template para acusado
         function createAccusedRow(id) {
             return `
-                <div class="accused-row" data-id="${id}">
+                <div class="person-row accused-row" data-id="${id}">
                     <div class="row-header">
                         <span class="row-title">Acusado #${id}</span>
                         <button type="button" class="remove-btn" onclick="removeAccused(${id})">
                             <i class="fas fa-trash"></i> Remover
                         </button>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="acusado-nome-${id}">Nome do Acusado</label>
-                            <input type="text" id="acusado-nome-${id}" placeholder="Nome completo" class="save-field">
-                        </div>
-                        <div class="form-group">
-                            <label for="acusado-genitora-${id}">Genitora</label>
-                            <input type="text" id="acusado-genitora-${id}" placeholder="Nome da mãe" class="save-field">
-                        </div>
+                    
+                    <div class="form-group">
+                        <label for="acusado-nome-${id}">Nome Completo</label>
+                        <input type="text" id="acusado-nome-${id}" placeholder="Nome completo" class="save-field">
                     </div>
                     
                     <div class="form-row">
@@ -637,38 +885,110 @@
                             <input type="date" id="acusado-nascimento-${id}" class="save-field">
                         </div>
                         <div class="form-group">
-                            <label for="acusado-rg-${id}">RG</label>
+                            <label for="acusado-mae-${id}">Nome Completo da Mãe</label>
+                            <input type="text" id="acusado-mae-${id}" placeholder="Nome da mãe" class="save-field">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="acusado-rg-${id}">RG/Órgão Expedidor</label>
                             <input type="text" id="acusado-rg-${id}" placeholder="Número do RG" class="save-field">
+                        </div>
+                        <div class="form-group">
+                            <label for="acusado-cpf-${id}">CPF</label>
+                            <input type="text" id="acusado-cpf-${id}" placeholder="CPF" class="save-field">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="acusado-endereco-${id}">Endereço Completo</label>
+                        <input type="text" id="acusado-endereco-${id}" placeholder="Rua, Nº, Bairro, Cidade e UF" class="save-field">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="acusado-ponto-ref-${id}">Ponto de Referência</label>
+                            <input type="text" id="acusado-ponto-ref-${id}" placeholder="Ponto de referência" class="save-field">
+                        </div>
+                        <div class="form-group">
+                            <label for="acusado-cnh-${id}">CNH</label>
+                            <input type="text" id="acusado-cnh-${id}" placeholder="Número da CNH" class="save-field">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="acusado-profissao-${id}">Profissão Declarada</label>
+                        <input type="text" id="acusado-profissao-${id}" placeholder="Profissão" class="save-field">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Informações Biométricas</label>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="acusado-cor-pele-${id}">Cor da Pele</label>
+                                <input type="text" id="acusado-cor-pele-${id}" placeholder="Cor da pele" class="save-field">
+                            </div>
+                            <div class="form-group">
+                                <label for="acusado-altura-${id}">Altura Estimada</label>
+                                <input type="text" id="acusado-altura-${id}" placeholder="Ex: 1,75m" class="save-field">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="acusado-cor-cabelos-${id}">Cor dos Cabelos</label>
+                                <input type="text" id="acusado-cor-cabelos-${id}" placeholder="Cor dos cabelos" class="save-field">
+                            </div>
+                            <div class="form-group">
+                                <label for="acusado-cor-olhos-${id}">Cor dos Olhos</label>
+                                <input type="text" id="acusado-cor-olhos-${id}" placeholder="Cor dos olhos" class="save-field">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Compleição Física</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="compleicao-${id}" value="Normal" class="save-field"> Normal</label>
+                                <label><input type="radio" name="compleicao-${id}" value="Magro" class="save-field"> Magro</label>
+                                <label><input type="radio" name="compleicao-${id}" value="Gordo" class="save-field"> Gordo</label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Marcas Características</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" id="acusado-tatuagem-${id}" value="Tatuagem" class="save-field"> Tatuagem</label>
+                                <label><input type="checkbox" id="acusado-cicatriz-${id}" value="Cicatriz" class="save-field"> Cicatriz</label>
+                                <label><input type="checkbox" id="acusado-sinal-${id}" value="Sinal de Nascença" class="save-field"> Sinal de Nascença</label>
+                                <label><input type="checkbox" id="acusado-outros-${id}" value="Outros" class="save-field"> Outros</label>
+                            </div>
+                            <input type="text" id="acusado-outros-desc-${id}" placeholder="Descrever marca característica" class="save-field" style="margin-top: 8px; width: 100%; padding: 10px; font-size: 14px;">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="acusado-alcunha-${id}">Alcunha</label>
+                            <input type="text" id="acusado-alcunha-${id}" placeholder="Alcunha/apelido" class="save-field">
                         </div>
                     </div>
                 </div>
             `;
         }
         
-        // Função para criar uma nova vítima
+        // Template para vítima
         function createVictimRow(id) {
             return `
-                <div class="victim-row" data-id="${id}">
+                <div class="person-row victim-row" data-id="${id}">
                     <div class="row-header">
                         <span class="row-title">Vítima #${id}</span>
                         <button type="button" class="remove-btn" onclick="removeVictim(${id})">
                             <i class="fas fa-trash"></i> Remover
                         </button>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="vitima-nome-${id}">Nome</label>
-                            <input type="text" id="vitima-nome-${id}" placeholder="Nome completo" class="save-field">
-                        </div>
-                        <div class="form-group">
-                            <label for="vitima-idade-${id}">Idade</label>
-                            <input type="number" id="vitima-idade-${id}" placeholder="Idade" class="save-field">
-                        </div>
-                    </div>
                     
                     <div class="form-group">
-                        <label for="vitima-endereco-${id}">Endereço</label>
-                        <input type="text" id="vitima-endereco-${id}" placeholder="Endereço completo" class="save-field">
+                        <label for="vitima-nome-${id}">Nome Completo</label>
+                        <input type="text" id="vitima-nome-${id}" placeholder="Nome completo" class="save-field">
                     </div>
                     
                     <div class="form-row">
@@ -677,14 +997,14 @@
                             <input type="date" id="vitima-nascimento-${id}" class="save-field">
                         </div>
                         <div class="form-group">
-                            <label for="vitima-profissao-${id}">Profissão</label>
-                            <input type="text" id="vitima-profissao-${id}" placeholder="Profissão" class="save-field">
+                            <label for="vitima-mae-${id}">Nome da Genitora</label>
+                            <input type="text" id="vitima-mae-${id}" placeholder="Nome da mãe" class="save-field">
                         </div>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="vitima-rg-${id}">RG</label>
+                            <label for="vitima-rg-${id}">RG/Órgão Expedidor</label>
                             <input type="text" id="vitima-rg-${id}" placeholder="Número do RG" class="save-field">
                         </div>
                         <div class="form-group">
@@ -694,70 +1014,91 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="vitima-mae-${id}">Nome da Mãe</label>
-                            <input type="text" id="vitima-mae-${id}" placeholder="Nome completo da mãe" class="save-field">
+                        <label for="vitima-endereco-${id}">Endereço Completo</label>
+                        <input type="text" id="vitima-endereco-${id}" placeholder="Rua, Nº, Bairro, Cidade e UF" class="save-field">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="vitima-cnh-${id}">CNH</label>
+                            <input type="text" id="vitima-cnh-${id}" placeholder="Número da CNH" class="save-field">
+                        </div>
+                        <div class="form-group">
+                            <label for="vitima-ponto-ref-${id}">Ponto de Referência</label>
+                            <input type="text" id="vitima-ponto-ref-${id}" placeholder="Ponto de referência" class="save-field">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vitima-telefone-${id}">Telefone</label>
+                        <input type="text" id="vitima-telefone-${id}" placeholder="Telefone" class="save-field">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vitima-profissao-${id}">Profissão Declarada</label>
+                        <input type="text" id="vitima-profissao-${id}" placeholder="Profissão" class="save-field">
                     </div>
                 </div>
             `;
         }
         
-        // Função para criar uma nova testemunha
+        // Template para testemunha
         function createWitnessRow(id) {
             return `
-                <div class="witness-row" data-id="${id}">
+                <div class="person-row witness-row" data-id="${id}">
                     <div class="row-header">
                         <span class="row-title">Testemunha #${id}</span>
                         <button type="button" class="remove-btn" onclick="removeWitness(${id})">
                             <i class="fas fa-trash"></i> Remover
                         </button>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="testemunha-nome-${id}">Nome</label>
-                            <input type="text" id="testemunha-nome-${id}" placeholder="Nome completo" class="save-field">
-                        </div>
-                        <div class="form-group">
-                            <label for="testemunha-idade-${id}">Idade</label>
-                            <input type="number" id="testemunha-idade-${id}" placeholder="Idade" class="save-field">
-                        </div>
+                    
+                    <div class="form-group">
+                        <label for="testemunha-nome-${id}">Nome Completo</label>
+                        <input type="text" id="testemunha-nome-${id}" placeholder="Nome completo" class="save-field">
                     </div>
                     
                     <div class="form-row">
-                        <div class="form-group">
-                            <label for="testemunha-genitora-${id}">Genitora</label>
-                            <input type="text" id="testemunha-genitora-${id}" placeholder="Nome da mãe" class="save-field">
-                        </div>
                         <div class="form-group">
                             <label for="testemunha-nascimento-${id}">Data de Nascimento</label>
                             <input type="date" id="testemunha-nascimento-${id}" class="save-field">
                         </div>
+                        <div class="form-group">
+                            <label for="testemunha-telefone-${id}">Telefone(s)</label>
+                            <input type="text" id="testemunha-telefone-${id}" placeholder="Telefone(s)" class="save-field">
+                        </div>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="testemunha-profissao-${id}">Profissão</label>
-                            <input type="text" id="testemunha-profissao-${id}" placeholder="Profissão" class="save-field">
-                        </div>
-                        <div class="form-group">
-                            <label for="testemunha-rg-${id}">RG</label>
+                            <label for="testemunha-rg-${id}">RG/Órgão Expedidor</label>
                             <input type="text" id="testemunha-rg-${id}" placeholder="Número do RG" class="save-field">
                         </div>
-                    </div>
-                    
-                    <div class="form-row">
                         <div class="form-group">
-                            <label for="testemunha-endereco-${id}">Endereço</label>
-                            <input type="text" id="testemunha-endereco-${id}" placeholder="Endereço completo" class="save-field">
-                        </div>
-                        <div class="form-group">
-                            <label for="testemunha-telefone-${id}">Telefone</label>
-                            <input type="tel" id="testemunha-telefone-${id}" placeholder="(83) 99999-9999" class="save-field">
+                            <label for="testemunha-cpf-${id}">CPF</label>
+                            <input type="text" id="testemunha-cpf-${id}" placeholder="CPF" class="save-field">
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="testemunha-cpf-${id}">CPF</label>
-                        <input type="text" id="testemunha-cpf-${id}" placeholder="CPF" class="save-field">
+                        <label for="testemunha-endereco-${id}">Endereço Completo</label>
+                        <input type="text" id="testemunha-endereco-${id}" placeholder="Rua, Nº, Bairro, Cidade e UF" class="save-field">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="testemunha-cnh-${id}">CNH</label>
+                            <input type="text" id="testemunha-cnh-${id}" placeholder="Número da CNH" class="save-field">
+                        </div>
+                        <div class="form-group">
+                            <label for="testemunha-ponto-ref-${id}">Ponto de Referência</label>
+                            <input type="text" id="testemunha-ponto-ref-${id}" placeholder="Ponto de referência" class="save-field">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="testemunha-profissao-${id}">Profissão Declarada</label>
+                        <input type="text" id="testemunha-profissao-${id}" placeholder="Profissão" class="save-field">
                     </div>
                 </div>
             `;
@@ -765,18 +1106,30 @@
         
         // Funções para remover elementos
         window.removeAccused = function(id) {
-            document.querySelector(`.accused-row[data-id="${id}"]`).remove();
+            const element = document.querySelector(`.accused-row[data-id="${id}"]`);
+            if (element) {
+                element.remove();
+                saveToLocalStorage();
+            }
         };
         
         window.removeVictim = function(id) {
-            document.querySelector(`.victim-row[data-id="${id}"]`).remove();
+            const element = document.querySelector(`.victim-row[data-id="${id}"]`);
+            if (element) {
+                element.remove();
+                saveToLocalStorage();
+            }
         };
         
         window.removeWitness = function(id) {
-            document.querySelector(`.witness-row[data-id="${id}"]`).remove();
+            const element = document.querySelector(`.witness-row[data-id="${id}"]`);
+            if (element) {
+                element.remove();
+                saveToLocalStorage();
+            }
         };
         
-        // Adicionar novo acusado
+        // Adicionar novos registros
         document.getElementById('add-accused').addEventListener('click', () => {
             accusedCount++;
             const container = document.getElementById('accused-container');
@@ -784,7 +1137,6 @@
             attachSaveListeners();
         });
         
-        // Adicionar nova vítima
         document.getElementById('add-victim').addEventListener('click', () => {
             victimCount++;
             const container = document.getElementById('victims-container');
@@ -792,7 +1144,6 @@
             attachSaveListeners();
         });
         
-        // Adicionar nova testemunha
         document.getElementById('add-witness').addEventListener('click', () => {
             witnessCount++;
             const container = document.getElementById('witnesses-container');
@@ -800,47 +1151,60 @@
             attachSaveListeners();
         });
         
-        // Função para formatar data
-        function formatDate(dateString) {
-            if (!dateString) return "";
-            const date = new Date(dateString);
-            return date.toLocaleDateString('pt-BR');
-        }
-        
-        // Função para formatar hora
-        function formatTime(timeString) {
-            if (!timeString) return "";
-            return timeString.substring(0, 5);
-        }
-        
-        // Função para coletar todos os dados do formulário
+        // Função para coletar dados do formulário
         function collectFormData() {
             const data = {
                 // Dados principais
+                boNum: document.getElementById('bo-num').value,
+                ciop: document.getElementById('ciop').value,
+                uop: document.getElementById('uop').value,
                 data: document.getElementById('data').value,
                 hora: document.getElementById('hora').value,
-                vtr: document.getElementById('vtr').value,
-                cmt: document.getElementById('cmt').value,
-                solicitante: document.getElementById('solicitante').value,
-                matSolicitante: document.getElementById('mat-solicitante').value,
                 endereco: document.getElementById('endereco').value,
-                telefone: document.getElementById('telefone').value,
-                classe: document.getElementById('classe').value,
-                objetos: document.getElementById('objetos').value,
+                pontoRef: document.getElementById('ponto-ref').value,
+                natureza: document.getElementById('natureza').value,
+                codigo: document.getElementById('codigo').value,
+                comandante: document.getElementById('comandante').value,
+                viatura: document.getElementById('viatura').value,
+                motorista: document.getElementById('motorista').value,
+                patrulheiro1: document.getElementById('patrulheiro1').value,
+                patrulheiro2: document.getElementById('patrulheiro2').value,
+                solicitante: document.getElementById('solicitante').value,
+                telSolicitante: document.getElementById('tel-solicitante').value,
+                endSolicitante: document.getElementById('end-solicitante').value,
+                
+                // Objetos
+                armaTipo: document.getElementById('arma-tipo').value,
+                armaMarca: document.getElementById('arma-marca').value,
+                armaCalibre: document.getElementById('arma-calibre').value,
+                armaAcabamento: document.getElementById('arma-acabamento').value,
+                armaSerie: document.getElementById('arma-serie').value,
+                armaCano: document.getElementById('arma-cano').value,
+                cartQuantidade: document.getElementById('cart-quantidade').value,
+                cartCalibre: document.getElementById('cart-calibre').value,
+                cartTipo: document.getElementById('cart-tipo').value,
+                outrosObj: document.getElementById('outros-obj').value,
+                
+                // Relato
                 relato: document.getElementById('relato').value,
-                postoGrad: document.getElementById('posto-grad').value,
-                matricula: document.getElementById('matricula').value,
+                
+                // Auto de resistência
+                autoMatricula: document.getElementById('auto-matricula').value,
+                autoAcusado: document.getElementById('auto-acusado').value,
+                autoCrime: document.getElementById('auto-crime').value,
+                autoMeio: document.getElementById('auto-meio').value,
+                autoResultado: document.getElementById('auto-resultado').value,
+                autoTest1: document.getElementById('auto-test1').value,
+                autoTest2: document.getElementById('auto-test2').value,
                 
                 // Contadores
                 accusedCount: accusedCount,
                 victimCount: victimCount,
                 witnessCount: witnessCount,
                 
-                // Acusados
+                // Acusados, vítimas, testemunhas
                 accused: [],
-                // Vítimas
                 victims: [],
-                // Testemunhas
                 witnesses: []
             };
             
@@ -848,11 +1212,36 @@
             for (let i = 1; i <= accusedCount; i++) {
                 const nome = document.getElementById(`acusado-nome-${i}`);
                 if (nome) {
+                    let compleicao = "";
+                    const radios = document.querySelectorAll(`input[name="compleicao-${i}"]`);
+                    radios.forEach(radio => {
+                        if (radio.checked) compleicao = radio.value;
+                    });
+                    
+                    const marcas = [];
+                    if (document.getElementById(`acusado-tatuagem-${i}`)?.checked) marcas.push("Tatuagem");
+                    if (document.getElementById(`acusado-cicatriz-${i}`)?.checked) marcas.push("Cicatriz");
+                    if (document.getElementById(`acusado-sinal-${i}`)?.checked) marcas.push("Sinal de Nascença");
+                    if (document.getElementById(`acusado-outros-${i}`)?.checked) marcas.push("Outros");
+                    
                     data.accused.push({
                         nome: nome.value,
-                        genitora: document.getElementById(`acusado-genitora-${i}`)?.value || "",
                         nascimento: document.getElementById(`acusado-nascimento-${i}`)?.value || "",
-                        rg: document.getElementById(`acusado-rg-${i}`)?.value || ""
+                        mae: document.getElementById(`acusado-mae-${i}`)?.value || "",
+                        rg: document.getElementById(`acusado-rg-${i}`)?.value || "",
+                        cpf: document.getElementById(`acusado-cpf-${i}`)?.value || "",
+                        endereco: document.getElementById(`acusado-endereco-${i}`)?.value || "",
+                        cnh: document.getElementById(`acusado-cnh-${i}`)?.value || "",
+                        pontoRef: document.getElementById(`acusado-ponto-ref-${i}`)?.value || "",
+                        profissao: document.getElementById(`acusado-profissao-${i}`)?.value || "",
+                        corPele: document.getElementById(`acusado-cor-pele-${i}`)?.value || "",
+                        altura: document.getElementById(`acusado-altura-${i}`)?.value || "",
+                        corCabelos: document.getElementById(`acusado-cor-cabelos-${i}`)?.value || "",
+                        corOlhos: document.getElementById(`acusado-cor-olhos-${i}`)?.value || "",
+                        compleicao: compleicao,
+                        marcas: marcas.join(", "),
+                        outrosMarcas: document.getElementById(`acusado-outros-desc-${i}`)?.value || "",
+                        alcunha: document.getElementById(`acusado-alcunha-${i}`)?.value || ""
                     });
                 }
             }
@@ -863,13 +1252,15 @@
                 if (nome) {
                     data.victims.push({
                         nome: nome.value,
-                        idade: document.getElementById(`vitima-idade-${i}`)?.value || "",
-                        endereco: document.getElementById(`vitima-endereco-${i}`)?.value || "",
                         nascimento: document.getElementById(`vitima-nascimento-${i}`)?.value || "",
-                        profissao: document.getElementById(`vitima-profissao-${i}`)?.value || "",
+                        mae: document.getElementById(`vitima-mae-${i}`)?.value || "",
                         rg: document.getElementById(`vitima-rg-${i}`)?.value || "",
                         cpf: document.getElementById(`vitima-cpf-${i}`)?.value || "",
-                        mae: document.getElementById(`vitima-mae-${i}`)?.value || ""
+                        endereco: document.getElementById(`vitima-endereco-${i}`)?.value || "",
+                        cnh: document.getElementById(`vitima-cnh-${i}`)?.value || "",
+                        pontoRef: document.getElementById(`vitima-ponto-ref-${i}`)?.value || "",
+                        telefone: document.getElementById(`vitima-telefone-${i}`)?.value || "",
+                        profissao: document.getElementById(`vitima-profissao-${i}`)?.value || ""
                     });
                 }
             }
@@ -880,14 +1271,14 @@
                 if (nome) {
                     data.witnesses.push({
                         nome: nome.value,
-                        idade: document.getElementById(`testemunha-idade-${i}`)?.value || "",
-                        genitora: document.getElementById(`testemunha-genitora-${i}`)?.value || "",
                         nascimento: document.getElementById(`testemunha-nascimento-${i}`)?.value || "",
-                        profissao: document.getElementById(`testemunha-profissao-${i}`)?.value || "",
+                        telefone: document.getElementById(`testemunha-telefone-${i}`)?.value || "",
                         rg: document.getElementById(`testemunha-rg-${i}`)?.value || "",
                         cpf: document.getElementById(`testemunha-cpf-${i}`)?.value || "",
                         endereco: document.getElementById(`testemunha-endereco-${i}`)?.value || "",
-                        telefone: document.getElementById(`testemunha-telefone-${i}`)?.value || ""
+                        cnh: document.getElementById(`testemunha-cnh-${i}`)?.value || "",
+                        pontoRef: document.getElementById(`testemunha-ponto-ref-${i}`)?.value || "",
+                        profissao: document.getElementById(`testemunha-profissao-${i}`)?.value || ""
                     });
                 }
             }
@@ -895,12 +1286,13 @@
             return data;
         }
         
-        // Função para salvar dados localmente
+        // Função para salvar dados
         function saveToLocalStorage() {
             try {
                 const formData = collectFormData();
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
                 showStatus('Dados salvos com sucesso!');
+                updatePreview();
                 return true;
             } catch (error) {
                 showStatus('Erro ao salvar dados: ' + error.message, true);
@@ -908,7 +1300,7 @@
             }
         }
         
-        // Função para carregar dados do localStorage
+        // Função para carregar dados
         function loadFromLocalStorage() {
             try {
                 const savedData = localStorage.getItem(STORAGE_KEY);
@@ -920,19 +1312,41 @@
                 const data = JSON.parse(savedData);
                 
                 // Carregar dados principais
+                document.getElementById('bo-num').value = data.boNum || '';
+                document.getElementById('ciop').value = data.ciop || '';
+                document.getElementById('uop').value = data.uop || '';
                 document.getElementById('data').value = data.data || '';
                 document.getElementById('hora').value = data.hora || '';
-                document.getElementById('vtr').value = data.vtr || '';
-                document.getElementById('cmt').value = data.cmt || '';
-                document.getElementById('solicitante').value = data.solicitante || '';
-                document.getElementById('mat-solicitante').value = data.matSolicitante || '';
                 document.getElementById('endereco').value = data.endereco || '';
-                document.getElementById('telefone').value = data.telefone || '';
-                document.getElementById('classe').value = data.classe || '';
-                document.getElementById('objetos').value = data.objetos || '';
+                document.getElementById('ponto-ref').value = data.pontoRef || '';
+                document.getElementById('natureza').value = data.natureza || '';
+                document.getElementById('codigo').value = data.codigo || '';
+                document.getElementById('comandante').value = data.comandante || '';
+                document.getElementById('viatura').value = data.viatura || '';
+                document.getElementById('motorista').value = data.motorista || '';
+                document.getElementById('patrulheiro1').value = data.patrulheiro1 || '';
+                document.getElementById('patrulheiro2').value = data.patrulheiro2 || '';
+                document.getElementById('solicitante').value = data.solicitante || '';
+                document.getElementById('tel-solicitante').value = data.telSolicitante || '';
+                document.getElementById('end-solicitante').value = data.endSolicitante || '';
+                document.getElementById('arma-tipo').value = data.armaTipo || '';
+                document.getElementById('arma-marca').value = data.armaMarca || '';
+                document.getElementById('arma-calibre').value = data.armaCalibre || '';
+                document.getElementById('arma-acabamento').value = data.armaAcabamento || '';
+                document.getElementById('arma-serie').value = data.armaSerie || '';
+                document.getElementById('arma-cano').value = data.armaCano || '';
+                document.getElementById('cart-quantidade').value = data.cartQuantidade || '';
+                document.getElementById('cart-calibre').value = data.cartCalibre || '';
+                document.getElementById('cart-tipo').value = data.cartTipo || '';
+                document.getElementById('outros-obj').value = data.outrosObj || '';
                 document.getElementById('relato').value = data.relato || '';
-                document.getElementById('posto-grad').value = data.postoGrad || '';
-                document.getElementById('matricula').value = data.matricula || '';
+                document.getElementById('auto-matricula').value = data.autoMatricula || '';
+                document.getElementById('auto-acusado').value = data.autoAcusado || '';
+                document.getElementById('auto-crime').value = data.autoCrime || '';
+                document.getElementById('auto-meio').value = data.autoMeio || '';
+                document.getElementById('auto-resultado').value = data.autoResultado || '';
+                document.getElementById('auto-test1').value = data.autoTest1 || '';
+                document.getElementById('auto-test2').value = data.autoTest2 || '';
                 
                 // Limpar containers
                 document.getElementById('accused-container').innerHTML = '';
@@ -952,9 +1366,36 @@
                         
                         // Preencher dados
                         document.getElementById(`acusado-nome-${index + 1}`).value = accused.nome || '';
-                        document.getElementById(`acusado-genitora-${index + 1}`).value = accused.genitora || '';
                         document.getElementById(`acusado-nascimento-${index + 1}`).value = accused.nascimento || '';
+                        document.getElementById(`acusado-mae-${index + 1}`).value = accused.mae || '';
                         document.getElementById(`acusado-rg-${index + 1}`).value = accused.rg || '';
+                        document.getElementById(`acusado-cpf-${index + 1}`).value = accused.cpf || '';
+                        document.getElementById(`acusado-endereco-${index + 1}`).value = accused.endereco || '';
+                        document.getElementById(`acusado-cnh-${index + 1}`).value = accused.cnh || '';
+                        document.getElementById(`acusado-ponto-ref-${index + 1}`).value = accused.pontoRef || '';
+                        document.getElementById(`acusado-profissao-${index + 1}`).value = accused.profissao || '';
+                        document.getElementById(`acusado-cor-pele-${index + 1}`).value = accused.corPele || '';
+                        document.getElementById(`acusado-altura-${index + 1}`).value = accused.altura || '';
+                        document.getElementById(`acusado-cor-cabelos-${index + 1}`).value = accused.corCabelos || '';
+                        document.getElementById(`acusado-cor-olhos-${index + 1}`).value = accused.corOlhos || '';
+                        document.getElementById(`acusado-outros-desc-${index + 1}`).value = accused.outrosMarcas || '';
+                        document.getElementById(`acusado-alcunha-${index + 1}`).value = accused.alcunha || '';
+                        
+                        // Preencher compleição
+                        if (accused.compleicao) {
+                            const radios = document.querySelectorAll(`input[name="compleicao-${index + 1}"]`);
+                            radios.forEach(radio => {
+                                if (radio.value === accused.compleicao) radio.checked = true;
+                            });
+                        }
+                        
+                        // Preencher marcas
+                        if (accused.marcas) {
+                            if (accused.marcas.includes("Tatuagem")) document.getElementById(`acusado-tatuagem-${index + 1}`).checked = true;
+                            if (accused.marcas.includes("Cicatriz")) document.getElementById(`acusado-cicatriz-${index + 1}`).checked = true;
+                            if (accused.marcas.includes("Sinal de Nascença")) document.getElementById(`acusado-sinal-${index + 1}`).checked = true;
+                            if (accused.marcas.includes("Outros")) document.getElementById(`acusado-outros-${index + 1}`).checked = true;
+                        }
                     });
                 }
                 
@@ -964,15 +1405,16 @@
                         victimCount = Math.max(victimCount, index + 1);
                         document.getElementById('victims-container').insertAdjacentHTML('beforeend', createVictimRow(index + 1));
                         
-                        // Preencher dados
                         document.getElementById(`vitima-nome-${index + 1}`).value = victim.nome || '';
-                        document.getElementById(`vitima-idade-${index + 1}`).value = victim.idade || '';
-                        document.getElementById(`vitima-endereco-${index + 1}`).value = victim.endereco || '';
                         document.getElementById(`vitima-nascimento-${index + 1}`).value = victim.nascimento || '';
-                        document.getElementById(`vitima-profissao-${index + 1}`).value = victim.profissao || '';
+                        document.getElementById(`vitima-mae-${index + 1}`).value = victim.mae || '';
                         document.getElementById(`vitima-rg-${index + 1}`).value = victim.rg || '';
                         document.getElementById(`vitima-cpf-${index + 1}`).value = victim.cpf || '';
-                        document.getElementById(`vitima-mae-${index + 1}`).value = victim.mae || '';
+                        document.getElementById(`vitima-endereco-${index + 1}`).value = victim.endereco || '';
+                        document.getElementById(`vitima-cnh-${index + 1}`).value = victim.cnh || '';
+                        document.getElementById(`vitima-ponto-ref-${index + 1}`).value = victim.pontoRef || '';
+                        document.getElementById(`vitima-telefone-${index + 1}`).value = victim.telefone || '';
+                        document.getElementById(`vitima-profissao-${index + 1}`).value = victim.profissao || '';
                     });
                 }
                 
@@ -982,16 +1424,15 @@
                         witnessCount = Math.max(witnessCount, index + 1);
                         document.getElementById('witnesses-container').insertAdjacentHTML('beforeend', createWitnessRow(index + 1));
                         
-                        // Preencher dados
                         document.getElementById(`testemunha-nome-${index + 1}`).value = witness.nome || '';
-                        document.getElementById(`testemunha-idade-${index + 1}`).value = witness.idade || '';
-                        document.getElementById(`testemunha-genitora-${index + 1}`).value = witness.genitora || '';
                         document.getElementById(`testemunha-nascimento-${index + 1}`).value = witness.nascimento || '';
-                        document.getElementById(`testemunha-profissao-${index + 1}`).value = witness.profissao || '';
+                        document.getElementById(`testemunha-telefone-${index + 1}`).value = witness.telefone || '';
                         document.getElementById(`testemunha-rg-${index + 1}`).value = witness.rg || '';
                         document.getElementById(`testemunha-cpf-${index + 1}`).value = witness.cpf || '';
                         document.getElementById(`testemunha-endereco-${index + 1}`).value = witness.endereco || '';
-                        document.getElementById(`testemunha-telefone-${index + 1}`).value = witness.telefone || '';
+                        document.getElementById(`testemunha-cnh-${index + 1}`).value = witness.cnh || '';
+                        document.getElementById(`testemunha-ponto-ref-${index + 1}`).value = witness.pontoRef || '';
+                        document.getElementById(`testemunha-profissao-${index + 1}`).value = witness.profissao || '';
                     });
                 }
                 
@@ -1000,12 +1441,10 @@
                     accusedCount = 1;
                     document.getElementById('accused-container').innerHTML = createAccusedRow(1);
                 }
-                
                 if (victimCount === 0) {
                     victimCount = 1;
                     document.getElementById('victims-container').innerHTML = createVictimRow(1);
                 }
-                
                 if (witnessCount === 0) {
                     witnessCount = 1;
                     document.getElementById('witnesses-container').innerHTML = createWitnessRow(1);
@@ -1021,200 +1460,266 @@
             }
         }
         
-        // Função para anexar listeners de salvamento automático
+        // Função para anexar listeners
         function attachSaveListeners() {
-            // Adicionar evento de input a todos os campos
             document.querySelectorAll('.save-field').forEach(field => {
                 if (!field.hasAttribute('data-save-listener')) {
                     field.setAttribute('data-save-listener', 'true');
                     field.addEventListener('input', () => {
-                        // Salvar após um pequeno delay para evitar muitas chamadas
                         clearTimeout(window.saveTimeout);
-                        window.saveTimeout = setTimeout(saveToLocalStorage, 1000);
+                        window.saveTimeout = setTimeout(saveToLocalStorage, 500);
+                    });
+                }
+            });
+            
+            document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(field => {
+                if (!field.hasAttribute('data-save-listener') && field.classList.contains('save-field')) {
+                    field.setAttribute('data-save-listener', 'true');
+                    field.addEventListener('change', () => {
+                        clearTimeout(window.saveTimeout);
+                        window.saveTimeout = setTimeout(saveToLocalStorage, 500);
                     });
                 }
             });
         }
         
-        // Função para atualizar a visualização
+        // Função para criar template do PDF - CORRIGIDA
+        function createPDFTemplate(data) {
+            let template = `
+                <div style="width: 100%; max-width: 800px; margin: 0 auto; font-family: 'Courier New', monospace; font-size: 9px; line-height: 1.2;">
+                    <div style="text-align: center; font-weight: bold; margin-bottom: 10px; font-size: 10px;">
+                        SECRETARIA DE ESTADO DA SEGURANÇA PÚBLICA E DA DEFESA SOCIAL<br>
+                        POLÍCIA MILITAR<br>
+                        COMANDO DE POLICIAMENTO REGIONAL III - CPRIII<br>
+                        17º BATALHÃO DE POLÍCIA MILITAR
+                    </div>
+                    
+                    <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 9px; line-height: 1.2;">
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 2px; width: 50%;"><strong>BOLETIM DE OCORRÊNCIA Nº</strong> ${data.boNum || '_________'}</td>
+                            <td style="border: 1px solid #000; padding: 2px; width: 50%;"><strong>Nº CIOP:</strong> ${data.ciop || '_________'}</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 2px;"><strong>UOp/SUOp</strong> ${data.uop || '_________'}</td>
+                            <td style="border: 1px solid #000; padding: 2px;"><strong>Data da Ocorrência</strong> ${formatDate(data.data) || '__/__/____'}</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 2px;"><strong>Hora</strong> ${formatTime(data.hora) || '_____'}</td>
+                            <td colspan="2" style="border: 1px solid #000; padding: 2px;"><strong>Endereço da Ocorrência (Rua, Bairro, Cidade e Nº)</strong> ${data.endereco || ''}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="border: 1px solid #000; padding: 2px;"><strong>Ponto de Referência:</strong> ${data.pontoRef || ''}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="border: 1px solid #000; padding: 2px;"><strong>Natureza da Ocorrência:</strong> ${data.natureza || ''} <strong style="margin-left: 20px;">Código da Ocorrência</strong> ${data.codigo || ''}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="border: 1px solid #000; padding: 2px;"><strong>Comandante da Guarnição (Nome, Posto/Grad. e Matrícula):</strong> ${data.comandante || ''} <strong style="margin-left: 20px;">Prefixo da Viatura</strong> ${data.viatura || ''}</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 2px;"><strong>Motorista (Nome, Grad. e Matrícula):</strong> ${data.motorista || ''}</td>
+                            <td style="border: 1px solid #000; padding: 2px;"><strong>Patrulheiro 01 (Nome, Grad. e Matrícula):</strong> ${data.patrulheiro1 || ''}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="border: 1px solid #000; padding: 2px;"><strong>Patrulheiro 02 (Nome, Grad. e Matrícula):</strong> ${data.patrulheiro2 || ''}</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 2px;"><strong>Nome Completo do Solicitante:</strong> ${data.solicitante || ''}</td>
+                            <td style="border: 1px solid #000; padding: 2px;"><strong>Número do(s) Telefone(s) do Solicitante(s):</strong> ${data.telSolicitante || ''}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="border: 1px solid #000; padding: 2px;"><strong>Endereço Completo do Solicitante (Rua, Nº, Bairro, Cidade e UF):</strong> ${data.endSolicitante || ''}</td>
+                        </tr>
+                    </table>
+            `;
+            
+            // Acusados
+            if (data.accused.length > 0) {
+                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">ACUSADO(S)</div>`;
+                
+                data.accused.forEach((acc, idx) => {
+                    const marcasText = acc.marcas + (acc.outrosMarcas ? ` - ${acc.outrosMarcas}` : '');
+                    
+                    template += `
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 2px; width: 50%;"><strong>Nome Completo:</strong> ${acc.nome || ''}</td>
+                                <td style="border: 1px solid #000; padding: 2px; width: 50%;"><strong>Data de Nascimento:</strong> ${formatDate(acc.nascimento) || ''}</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 2px;"><strong>Nome Completo da Mãe:</strong> ${acc.mae || ''}</td>
+                                <td style="border: 1px solid #000; padding: 2px;"><strong>Nº RG/Órgão Expedidor:</strong> ${acc.rg || ''} <strong style="margin-left: 10px;">Nº CPF:</strong> ${acc.cpf || ''}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="border: 1px solid #000; padding: 2px;"><strong>Endereço Completo (Rua, Nº, Bairro, Cidade e UF):</strong> ${acc.endereco || ''}</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 2px;"><strong>Ponto de Referência:</strong> ${acc.pontoRef || ''}</td>
+                                <td style="border: 1px solid #000; padding: 2px;"><strong>Nº CNH:</strong> ${acc.cnh || ''} <strong style="margin-left: 10px;">Profissão Declarada:</strong> ${acc.profissao || ''}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="border: 1px solid #000; padding: 2px;"><strong>Informações Biométricas</strong></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 2px;"><strong>Cor da Pele:</strong> ${acc.corPele || ''} <strong style="margin-left: 10px;">Altura Estimada:</strong> ${acc.altura || ''}</td>
+                                <td style="border: 1px solid #000; padding: 2px;"><strong>Cor dos Cabelos:</strong> ${acc.corCabelos || ''} <strong style="margin-left: 10px;">Cor dos Olhos:</strong> ${acc.corOlhos || ''}</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 2px;"><strong>Compleição Física:</strong> ${acc.compleicao || ''}</td>
+                                <td style="border: 1px solid #000; padding: 2px;"><strong>Marca(s) Característica(s):</strong> ${marcasText || ''}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="border: 1px solid #000; padding: 2px;"><strong>Alcunha:</strong> ${acc.alcunha || ''}</td>
+                            </tr>
+                        </table>
+                    `;
+                });
+            } else {
+                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">ACUSADO(S)</div>
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                    <tr><td style="border: 1px solid #000; padding: 2px;"><strong>Nome Completo:</strong> ___________________________</td></tr>
+                </table>`;
+            }
+            
+            // Vítimas
+            if (data.victims.length > 0) {
+                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">VÍTIMA(S)</div>`;
+                
+                data.victims.forEach((vit, idx) => {
+                    template += `
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 2px; width: 50%;"><strong>Nome Completo:</strong> ${vit.nome || ''}</td>
+                                <td style="border: 1px solid #000; padding: 2px; width: 50%;"><strong>Data de Nascimento:</strong> ${formatDate(vit.nascimento) || ''}</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 2px;"><strong>Nome Completo da Genitora:</strong> ${vit.mae || ''}</td>
+                                <td style="border: 1px solid #000; padding: 2px;"><strong>Nº RG/Órgão Expedidor:</strong> ${vit.rg || ''} <strong style="margin-left: 10px;">Nº CPF:</strong> ${vit.cpf || ''}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="border: 1px solid #000; padding: 2px;"><strong>Endereço Completo (Rua, Nº, Bairro, Cidade e UF):</strong> ${vit.endereco || ''}</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 2px;"><strong>Ponto de Referência:</strong> ${vit.pontoRef || ''}</td>
+                                <td style="border: 1px solid #000; padding: 2px;"><strong>Nº CNH:</strong> ${vit.cnh || ''} <strong style="margin-left: 10px;">Nº Telefone(s):</strong> ${vit.telefone || ''}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="border: 1px solid #000; padding: 2px;"><strong>Profissão Declarada:</strong> ${vit.profissao || ''}</td>
+                            </tr>
+                        </table>
+                    `;
+                });
+            } else {
+                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">VÍTIMA(S)</div>
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                    <tr><td style="border: 1px solid #000; padding: 2px;"><strong>Nome Completo:</strong> ___________________________</td></tr>
+                </table>`;
+            }
+            
+            // Testemunhas
+            if (data.witnesses.length > 0) {
+                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">TESTEMUNHA(S)</div>`;
+                
+                data.witnesses.forEach((test, idx) => {
+                    template += `
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 2px; width: 50%;"><strong>Nome Completo:</strong> ${test.nome || ''}</td>
+                                <td style="border: 1px solid #000; padding: 2px; width: 50%;"><strong>Data de Nascimento:</strong> ${formatDate(test.nascimento) || ''}</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 2px;"><strong>Número(s) do(s) Telefone(s) da(s) Testemunha(s):</strong> ${test.telefone || ''}</td>
+                                <td style="border: 1px solid #000; padding: 2px;"><strong>Nº RG/Órgão Expedidor:</strong> ${test.rg || ''} <strong style="margin-left: 10px;">Nº CPF:</strong> ${test.cpf || ''}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="border: 1px solid #000; padding: 2px;"><strong>Endereço Completo (Rua, Nº, Bairro, Cidade e UF):</strong> ${test.endereco || ''}</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 2px;"><strong>Ponto de Referência:</strong> ${test.pontoRef || ''}</td>
+                                <td style="border: 1px solid #000; padding: 2px;"><strong>Nº CNH:</strong> ${test.cnh || ''} <strong style="margin-left: 10px;">Profissão Declarada:</strong> ${test.profissao || ''}</td>
+                            </tr>
+                        </table>
+                    `;
+                });
+            } else {
+                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">TESTEMUNHA(S)</div>
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                    <tr><td style="border: 1px solid #000; padding: 2px;"><strong>Nome Completo:</strong> ___________________________</td></tr>
+                </table>`;
+            }
+            
+            // Objetos apreendidos
+            template += `
+                <div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">ARMA(S) DE FOGO APREENDIDA(S)</div>
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                    <tr>
+                        <td style="border: 1px solid #000; padding: 2px; width: 25%;"><strong>Tipo:</strong> ${data.armaTipo || ''}</td>
+                        <td style="border: 1px solid #000; padding: 2px; width: 25%;"><strong>Marca:</strong> ${data.armaMarca || ''}</td>
+                        <td style="border: 1px solid #000; padding: 2px; width: 25%;"><strong>Calibre:</strong> ${data.armaCalibre || ''}</td>
+                        <td style="border: 1px solid #000; padding: 2px; width: 25%;"><strong>Acabamento:</strong> ${data.armaAcabamento || ''}</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #000; padding: 2px;"><strong>Nº de Série:</strong> ${data.armaSerie || ''}</td>
+                        <td colspan="3" style="border: 1px solid #000; padding: 2px;"><strong>Dimensão do Cano:</strong> ${data.armaCano || ''}</td>
+                    </tr>
+                </table>
+                
+                <div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">CARTUCHO(S) APREENDIDO(S)</div>
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                    <tr>
+                        <td style="border: 1px solid #000; padding: 2px; width: 33%;"><strong>Quantidade:</strong> ${data.cartQuantidade || ''}</td>
+                        <td style="border: 1px solid #000; padding: 2px; width: 33%;"><strong>Calibre:</strong> ${data.cartCalibre || ''}</td>
+                        <td style="border: 1px solid #000; padding: 2px; width: 34%;"><strong>Tipo:</strong> ${data.cartTipo || ''}</td>
+                    </tr>
+                </table>
+                
+                <div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">OUTRO(S) OBJETO(S) APREENDIDO(S)</div>
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                    <tr><td style="border: 1px solid #000; padding: 2px;">${data.outrosObj || ''}</td></tr>
+                </table>
+                
+                <div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">RELATO DA OCORRÊNCIA</div>
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                    <tr><td style="border: 1px solid #000; padding: 5px; min-height: 80px; vertical-align: top;">${data.relato || ''}</td></tr>
+                </table>
+                
+                <div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">AUTO DE RESISTENCIA A PRISÃO</div>
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                    <tr><td style="border: 1px solid #000; padding: 5px;">
+                        No Exercício legal de minha função policial, abordei e dei voz de prisão ao acusado ${data.autoAcusado || ''}, por ter encontrado o mesmo em flagrante delito de crime e/ou contravenção penal de ${data.autoCrime || ''} e, porque o infrator não obedecesse, antes resistisse à prisão, apesar das advertências que lhe fiz, foi necessário o uso da força moderada e progressiva, empregando para isso ${data.autoMeio || ''}, do que resultou em ${data.autoResultado || ''}. Para constar, lavro o presente Auto de Resistência à Prisão, que assino com a(s) Testemunha(s) ${data.autoTest1 || ''} e ${data.autoTest2 || ''}.
+                    </td></tr>
+                </table>
+                
+                <div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">R E C I B O</div>
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                    <tr><td style="border: 1px solid #000; padding: 5px;">
+                        Recebi às ______ h ______ min., de ___/___/____, os Acusado(s), Arma(s) e/ou objetos descritos neste documento.<br><br>
+                        Nome: ____________________ Matrícula ____________________ Assinatura ____________________
+                    </td></tr>
+                </table>
+            </div>
+            `;
+            
+            return template;
+        }
+        
+        // Atualizar visualização
         function updatePreview() {
             const data = collectFormData();
-            
-            // Gerar string de acusados
-            let acusadosStr = "";
-            data.accused.forEach(acc => {
-                acusadosStr += `ACUSADO: ${acc.nome} GENITORA: ${acc.genitora} DATA DE NASCIMENTO: ${formatDate(acc.nascimento)} RG : ${acc.rg}\n`;
-            });
-            
-            // Gerar string de vítimas
-            let vitimasStr = "";
-            data.victims.forEach(vit => {
-                vitimasStr += `Nome: ${vit.nome} || Idade: ${vit.idade}\n`;
-                vitimasStr += `End.: ${vit.endereco} || DATA DE NASCIMENTO.: ${formatDate(vit.nascimento)}\n`;
-                vitimasStr += `Profissão: ${vit.profissao} | RG: ${vit.rg} | CPF: ${vit.cpf}\n`;
-                vitimasStr += `Nome da Mãe: ${vit.mae}\n\n`;
-            });
-            
-            // Gerar string de testemunhas
-            let testemunhasStr = "";
-            data.witnesses.forEach(test => {
-                testemunhasStr += `Nome: ${test.nome} || Idade: ${test.idade}\n`;
-                testemunhasStr += `GENITORA.: ${test.genitora} || DATA DE NASCIMENTO: ${formatDate(test.nascimento)}\n`;
-                testemunhasStr += `Profissão: ${test.profissao} | RG: ${test.rg} | CPF: ${test.cpf}\n`;
-                testemunhasStr += `Nome: ${test.nome} || DN: ${formatDate(test.nascimento)}\n`;
-                testemunhasStr += `End.: ${test.endereco} || Tel: ${test.telefone}\n`;
-                testemunhasStr += `Profissão: ${test.profissao} | RG.: ${test.rg} | CPF: ${test.cpf}\n\n`;
-            });
-            
-            // Gerar visualização
-            const preview = document.getElementById('pdf-preview');
-            preview.innerHTML = `
-POLÍCIA MILITAR DO ESTADO DA PARAÍBA
-
-COMANDO DO POLICIAMENTO DA REGIÃO METROPOLITANA
-
-17º BATALHÃO DE POLÍCIA MILITAR
-
-BOLETIM DE OCORRÊNCIA POLICIAL
-
-|Data: ${formatDate(data.data)}|Hora: ${formatTime(data.hora)}|Vtr.: ${data.vtr}|Cmt.: ${data.cmt}|
-|---|---|---|---|
-|Solicitante: ${data.solicitante}|||MAT.: ${data.matSolicitante}|
-|End.: ${data.endereco}|||Tel.: ${data.telefone}|
-|Ocorrência: ${data.classe}|||Classe: ${data.classe}|
-${acusadosStr}
-|VÍTIMA (S)||||
-|---|---|---|---|
-${vitimasStr}
-|TESTEMUNHA(S)|
-${testemunhasStr}
-|Objetos apreendidos: ${data.objetos}||
-
-POSTO/GRAD.: ${data.postoGrad} MAT: ${data.matricula}
-
-RELATO:
-${data.relato}
-
-Assinatura
-
-| RECIBO    | Recebi às ______ horas, do dia ______/______/______ os acusado(s) e/ou arma(s) e/ou objeto(s) descritos neste documento. |
-|---|---|
-| Nome Legível    | Assinatura e Matrícula do Recebedor |
-`;
+            const template = createPDFTemplate(data);
+            document.getElementById('pdf-preview-content').innerHTML = template;
         }
         
-        // Atualizar visualização ao clicar no botão
-        document.getElementById('update-preview').addEventListener('click', updatePreview);
-        
-        // Salvar dados localmente
-        document.getElementById('save-local').addEventListener('click', saveToLocalStorage);
-        
-        // Carregar dados do localStorage
-        document.getElementById('load-local').addEventListener('click', loadFromLocalStorage);
-        
-        // Limpar formulário
-        document.getElementById('clear-form').addEventListener('click', () => {
-            if (confirm('Tem certeza que deseja limpar todos os campos do formulário? Isso também apagará os dados salvos localmente.')) {
-                // Limpar campos principais
-                document.querySelectorAll('input, select, textarea').forEach(element => {
-                    element.value = '';
-                });
-                
-                // Limpar containers
-                document.getElementById('accused-container').innerHTML = '';
-                document.getElementById('victims-container').innerHTML = '';
-                document.getElementById('witnesses-container').innerHTML = '';
-                
-                // Resetar contadores
-                accusedCount = 0;
-                victimCount = 0;
-                witnessCount = 0;
-                
-                // Adicionar um registro vazio para cada
-                accusedCount = 1;
-                victimCount = 1;
-                witnessCount = 1;
-                
-                document.getElementById('accused-container').innerHTML = createAccusedRow(1);
-                document.getElementById('victims-container').innerHTML = createVictimRow(1);
-                document.getElementById('witnesses-container').innerHTML = createWitnessRow(1);
-                
-                // Limpar localStorage
-                localStorage.removeItem(STORAGE_KEY);
-                
-                attachSaveListeners();
-                updatePreview();
-                showStatus('Formulário limpo e dados locais removidos!');
-            }
-        });
-        
-        // Função para adicionar nova página se necessário
-        function addNewPageIfNeeded(doc, yPos, margin = 20) {
-            const pageHeight = doc.internal.pageSize.height;
-            if (yPos > pageHeight - margin) {
-                doc.addPage();
-                return margin; // Retorna a posição Y inicial da nova página
-            }
-            return yPos;
-        }
-        
-        // Função para desenhar o recibo com altura maior e "descritos neste documento" alinhado com "RECIBO"
-        function drawReceipt(doc, yPos) {
-            const reciboAltura = 60; // Altura aumentada do recibo
-            const linhaAltura = reciboAltura / 2; // 30 pixels para cada linha
-            
-            // Desenhar a tabela do recibo
-            doc.setLineWidth(0.5);
-            doc.rect(10, yPos, 190, reciboAltura);
-            
-            // Linha vertical dividindo a tabela
-            doc.line(60, yPos, 60, yPos + reciboAltura);
-            
-            // Linha horizontal dividindo as duas linhas
-            doc.line(10, yPos + linhaAltura, 200, yPos + linhaAltura);
-            
-            // PRIMEIRA LINHA DO RECIBO
-            // "RECIBO" na primeira célula (esquerda) - centralizado verticalmente
-            doc.setFontSize(12);
-            doc.setFont("helvetica", "bold");
-            doc.text("RECIBO", 35, yPos + (linhaAltura / 2), { align: "center" });
-            
-            // Texto do recebimento na segunda célula (direita)
-            doc.setFontSize(10);
-            doc.setFont("helvetica", "normal");
-            
-            // Primeira parte do texto (mais acima)
-            doc.text("Recebi às ______ horas, do dia ______/______/______", 
-                     125, yPos + 10, { align: "center", maxWidth: 130 });
-            
-            // Segunda parte do texto
-            doc.text("os acusado(s) e/ou arma(s) e/ou objeto(s)", 
-                     125, yPos + 18, { align: "center", maxWidth: 130 });
-            
-            // "descritos neste documento." na mesma linha que "RECIBO"
-            doc.text("descritos neste documento.", 
-                     125, yPos + 26, { align: "center", maxWidth: 130 });
-            
-            // SEGUNDA LINHA DO RECIBO
-            // Calcular posição Y para centralizar verticalmente na segunda linha
-            const segundaAltura = yPos + linhaAltura + (linhaAltura / 2);
-            
-            doc.text("Nome Legível", 35, segundaAltura, { align: "center" });
-            doc.text("Assinatura e Matrícula do Recebedor", 125, segundaAltura, { align: "center" });
-            
-            return yPos + reciboAltura + 10; // Retorna nova posição Y com margem
-        }
-        
-        // Gerar PDF
-        document.getElementById('generate-pdf').addEventListener('click', async () => {
+        // Gerar PDF CORRIGIDO - que cabe horizontalmente em A4
+        async function generatePDF() {
             // Validar campos obrigatórios
-            const requiredFields = ['data', 'hora', 'relato'];
+            const requiredFields = ['bo-num', 'data', 'hora', 'relato'];
             let missingFields = [];
             
             requiredFields.forEach(fieldId => {
                 const field = document.getElementById(fieldId);
                 if (!field.value.trim()) {
-                    missingFields.push(field.previousElementSibling.textContent.replace(' *', ''));
+                    missingFields.push(fieldId.replace('-', ' '));
                 }
             });
             
@@ -1223,193 +1728,176 @@ Assinatura
                 return;
             }
             
-            // Atualizar visualização antes de gerar PDF
-            updatePreview();
-            
-            // Usar jsPDF para gerar o PDF
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            
-            // Configurar fonte e tamanho
-            doc.setFont("helvetica");
-            doc.setFontSize(12);
-            
-            // Coletar dados
             const data = collectFormData();
             
-            // Posição Y inicial
-            let yPos = 20;
-            
-            // Adicionar cabeçalho
-            doc.setFontSize(14);
-            doc.setFont("helvetica", "bold");
-            doc.text("POLÍCIA MILITAR DO ESTADO DA PARAÍBA", 105, yPos, { align: "center" });
-            yPos += 7;
-            doc.text("COMANDO DO POLICIAMENTO DA REGIÃO METROPOLITANA", 105, yPos, { align: "center" });
-            yPos += 7;
-            doc.text("17º BATALHÃO DE POLÍCIA MILITAR", 105, yPos, { align: "center" });
-            yPos += 7;
-            doc.text("BOLETIM DE OCORRÊNCIA POLICIAL", 105, yPos, { align: "center" });
-            yPos += 10;
-            
-            // Desenhar tabela superior
-            doc.setLineWidth(0.5);
-            doc.rect(10, yPos, 190, 40);
-            doc.line(60, yPos, 60, yPos + 40); // Linha vertical 1
-            doc.line(110, yPos, 110, yPos + 40); // Linha vertical 2
-            doc.line(160, yPos, 160, yPos + 40); // Linha vertical 3
-            doc.line(10, yPos + 10, 200, yPos + 10); // Linha horizontal 1
-            doc.line(10, yPos + 20, 200, yPos + 20); // Linha horizontal 2
-            doc.line(10, yPos + 30, 200, yPos + 30); // Linha horizontal 3
-            
-            // Adicionar texto na tabela superior
-            doc.setFontSize(10);
-            doc.setFont("helvetica", "normal");
-            
-            // Preencher tabela superior
-            doc.text("Data:", 12, yPos + 5);
-            doc.text(formatDate(data.data), 25, yPos + 5);
-            
-            doc.text("Hora:", 62, yPos + 5);
-            doc.text(formatTime(data.hora), 75, yPos + 5);
-            
-            doc.text("Vtr.:", 112, yPos + 5);
-            doc.text(data.vtr, 130, yPos + 5);
-            
-            doc.text("Cmt.:", 162, yPos + 5);
-            doc.text(data.cmt, 175, yPos + 5);
-            
-            doc.text("Solicitante:", 12, yPos + 15);
-            doc.text(data.solicitante, 40, yPos + 15);
-            
-            doc.text("MAT.:", 162, yPos + 15);
-            doc.text(data.matSolicitante, 175, yPos + 15);
-            
-            doc.text("End.:", 12, yPos + 25);
-            doc.text(data.endereco, 25, yPos + 25);
-            
-            doc.text("Tel.:", 162, yPos + 25);
-            doc.text(data.telefone, 175, yPos + 25);
-            
-            doc.text("Ocorrência:", 12, yPos + 35);
-            doc.text(data.classe, 40, yPos + 35);
-            
-            doc.text("Classe:", 112, yPos + 35);
-            doc.text(data.classe, 130, yPos + 35);
-            
-            yPos += 50;
-            
-            // Verificar se precisa de nova página
-            yPos = addNewPageIfNeeded(doc, yPos, 30);
-            
-            // Seção do(s) acusado(s)
-            data.accused.forEach(acc => {
-                if (acc.nome) {
-                    yPos = addNewPageIfNeeded(doc, yPos, 30);
-                    doc.text(`ACUSADO: ${acc.nome} GENITORA: ${acc.genitora} DATA DE NASCIMENTO: ${formatDate(acc.nascimento)} RG : ${acc.rg}`, 10, yPos);
-                    yPos += 8;
+            try {
+                showStatus('Gerando PDF... Aguarde!');
+                
+                // Cria o template completo
+                const fullTemplate = createPDFTemplate(data);
+                
+                // Cria um elemento temporário para renderização
+                const tempContainer = document.createElement('div');
+                tempContainer.style.position = 'fixed';
+                tempContainer.style.left = '-9999px';
+                tempContainer.style.top = '0';
+                tempContainer.style.width = '790px'; // Largura ajustada para A4 (210mm em pixels ~ 793px)
+                tempContainer.style.padding = '15px';
+                tempContainer.style.boxSizing = 'border-box';
+                tempContainer.style.backgroundColor = 'white';
+                tempContainer.style.fontFamily = "'Courier New', monospace";
+                tempContainer.style.fontSize = '9px';
+                tempContainer.style.lineHeight = '1.2';
+                tempContainer.innerHTML = fullTemplate;
+                
+                document.body.appendChild(tempContainer);
+                
+                // Captura como imagem
+                const canvas = await html2canvas(tempContainer, {
+                    scale: 1.5, // Qualidade média
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#ffffff',
+                    width: 790,
+                    height: tempContainer.scrollHeight,
+                    windowWidth: 790,
+                    windowHeight: tempContainer.scrollHeight
+                });
+                
+                // Remove o elemento temporário
+                document.body.removeChild(tempContainer);
+                
+                const imgData = canvas.toDataURL('image/png');
+                
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4',
+                    compress: true
+                });
+                
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                
+                // Calcula a altura da imagem em mm
+                const imgHeight = (canvas.height * 25.4) / 96; // Converter pixels para mm
+                const scaleFactor = (pdfWidth - 10) / (canvas.width * 25.4 / 96); // 5mm de margem de cada lado
+                const scaledHeight = imgHeight * scaleFactor;
+                
+                // Se for muito alto, divide em páginas
+                if (scaledHeight > pdfHeight - 10) {
+                    let position = 5; // Margem superior
+                    let remainingHeight = scaledHeight;
+                    
+                    while (remainingHeight > 0) {
+                        const pageHeight = Math.min(pdfHeight - 10, remainingHeight);
+                        const sourceHeight = (pageHeight / scaledHeight) * canvas.height;
+                        
+                        pdf.addImage(
+                            imgData,
+                            'PNG',
+                            5, // Margem esquerda
+                            position,
+                            pdfWidth - 10, // Largura com margens
+                            pageHeight,
+                            undefined,
+                            'FAST'
+                        );
+                        
+                        remainingHeight -= pageHeight;
+                        position -= pdfHeight - 10; // Ajuste para próxima página
+                        
+                        if (remainingHeight > 0) {
+                            pdf.addPage();
+                            position = 5; // Resetar posição para nova página
+                        }
+                    }
+                } else {
+                    // Cabe em uma página só
+                    pdf.addImage(
+                        imgData,
+                        'PNG',
+                        5, // Margem esquerda
+                        5, // Margem superior
+                        pdfWidth - 10, // Largura com margens
+                        scaledHeight,
+                        undefined,
+                        'FAST'
+                    );
                 }
-            });
-            
-            // Ajustar posição se não houver acusados
-            if (yPos < 80) yPos = 80;
-            
-            // Verificar se precisa de nova página antes da tabela de vítimas
-            yPos = addNewPageIfNeeded(doc, yPos, 60);
-            
-            // Tabela de vítimas
-            doc.rect(10, yPos, 190, 60);
-            doc.text("VÍTIMA (S)", 12, yPos + 5);
-            
-            // Adicionar vítimas
-            let victimY = yPos + 15;
-            data.victims.forEach(vit => {
-                if (vit.nome && victimY < yPos + 50) {
-                    doc.text(`Nome: ${vit.nome} || Idade: ${vit.idade}`, 12, victimY);
-                    victimY += 6;
-                    doc.text(`End.: ${vit.endereco} || DATA DE NASCIMENTO.: ${formatDate(vit.nascimento)}`, 12, victimY);
-                    victimY += 6;
-                    doc.text(`Profissão: ${vit.profissao} | RG: ${vit.rg} | CPF: ${vit.cpf}`, 12, victimY);
-                    victimY += 6;
-                    doc.text(`Nome da Mãe: ${vit.mae}`, 12, victimY);
-                    victimY += 10;
+                
+                // Salva o PDF
+                const fileName = `BO_${data.boNum}_${formatDate(data.data).replace(/\//g, '-')}.pdf`;
+                pdf.save(fileName);
+                
+                showStatus('PDF gerado com sucesso!');
+                
+            } catch (error) {
+                console.error('Erro ao gerar PDF:', error);
+                showStatus('Erro ao gerar PDF: ' + error.message, true);
+                
+                // Fallback: usar o método direto se html2canvas falhar
+                try {
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF({
+                        orientation: 'portrait',
+                        unit: 'mm',
+                        format: 'a4'
+                    });
+                    
+                    // Adicionar conteúdo como texto (fallback simples)
+                    const text = `BOLETIM DE OCORRÊNCIA Nº ${data.boNum || ''}\nData: ${formatDate(data.data) || ''}\nRelato: ${data.relato?.substring(0, 2000) || ''}`;
+                    pdf.text(text, 10, 10);
+                    pdf.save(`BO_${data.boNum}_fallback.pdf`);
+                    showStatus('PDF gerado (versão simplificada)');
+                } catch (fallbackError) {
+                    showStatus('Erro crítico ao gerar PDF', true);
                 }
-            });
-            
-            yPos += 65;
-            
-            // Verificar se precisa de nova página antes da tabela de testemunhas
-            yPos = addNewPageIfNeeded(doc, yPos, 80);
-            
-            // Tabela de testemunhas
-            doc.rect(10, yPos, 190, 60);
-            doc.text("TESTEMUNHA(S)", 12, yPos + 5);
-            
-            // Adicionar testemunhas
-            let witnessY = yPos + 15;
-            data.witnesses.forEach(test => {
-                if (test.nome && witnessY < yPos + 50) {
-                    doc.text(`Nome: ${test.nome} || Idade: ${test.idade}`, 12, witnessY);
-                    witnessY += 5;
-                    doc.text(`GENITORA.: ${test.genitora} || DATA DE NASCIMENTO: ${formatDate(test.nascimento)}`, 12, witnessY);
-                    witnessY += 5;
-                    doc.text(`Profissão: ${test.profissao} | RG: ${test.rg} | CPF: ${test.cpf}`, 12, witnessY);
-                    witnessY += 5;
-                    doc.text(`Nome: ${test.nome} || DN: ${formatDate(test.nascimento)}`, 12, witnessY);
-                    witnessY += 5;
-                    doc.text(`End.: ${test.endereco} || Tel: ${test.telefone}`, 12, witnessY);
-                    witnessY += 5;
-                    doc.text(`Profissão: ${test.profissao} | RG.: ${test.rg} | CPF: ${test.cpf}`, 12, witnessY);
-                    witnessY += 10;
-                }
-            });
-            
-            yPos += 65;
-            
-            // Verificar se precisa de nova página antes dos objetos
-            yPos = addNewPageIfNeeded(doc, yPos, 40);
-            
-            // Objetos apreendidos
-            doc.text(`Objetos apreendidos: ${data.objetos}`, 10, yPos);
-            yPos += 10;
-            
-            // Verificar se precisa de nova página antes da assinatura
-            yPos = addNewPageIfNeeded(doc, yPos, 50);
-            
-            // Assinatura
-            doc.text(`POSTO/GRAD.: ${data.postoGrad} MAT: ${data.matricula}`, 10, yPos);
-            yPos += 10;
-            
-            doc.text("RELATO:", 10, yPos);
-            yPos += 10;
-            
-            // Adicionar relato com quebra de linha e verificação de página
-            const relatoLines = doc.splitTextToSize(data.relato, 180);
-            for (let i = 0; i < relatoLines.length; i++) {
-                yPos = addNewPageIfNeeded(doc, yPos, 20);
-                doc.text(relatoLines[i], 10, yPos);
-                yPos += 6;
             }
-            
-            yPos = addNewPageIfNeeded(doc, yPos, 60); // Margem maior para o recibo
-            doc.text("Assinatura", 10, yPos);
-            
-            // Verificar se precisa de nova página antes do recibo
-            yPos = addNewPageIfNeeded(doc, yPos + 15, 70); // Margem de 70 pixels
-            
-            // Desenhar o recibo conforme a imagem anexada
-            yPos = drawReceipt(doc, yPos);
-            
-            // Salvar PDF
-            const fileName = `boletim_ocorrencia_${formatDate(data.data).replace(/\//g, '_')}_${formatTime(data.hora).replace(/:/g, '')}.pdf`;
-            doc.save(fileName);
-            
-            showStatus('PDF gerado com sucesso!');
+        }
+        
+        // Event Listeners
+        document.getElementById('update-preview').addEventListener('click', updatePreview);
+        document.getElementById('save-local').addEventListener('click', saveToLocalStorage);
+        document.getElementById('load-local').addEventListener('click', loadFromLocalStorage);
+        document.getElementById('generate-pdf').addEventListener('click', generatePDF);
+        
+        document.getElementById('clear-form').addEventListener('click', () => {
+            if (confirm('Tem certeza que deseja limpar todos os campos do formulário?')) {
+                document.querySelectorAll('input, textarea, select').forEach(element => {
+                    if (element.type === 'radio' || element.type === 'checkbox') {
+                        element.checked = false;
+                    } else {
+                        element.value = '';
+                    }
+                });
+                
+                document.getElementById('accused-container').innerHTML = '';
+                document.getElementById('victims-container').innerHTML = '';
+                document.getElementById('witnesses-container').innerHTML = '';
+                
+                accusedCount = 0;
+                victimCount = 0;
+                witnessCount = 0;
+                
+                accusedCount = 1;
+                victimCount = 1;
+                witnessCount = 1;
+                
+                document.getElementById('accused-container').innerHTML = createAccusedRow(1);
+                document.getElementById('victims-container').innerHTML = createVictimRow(1);
+                document.getElementById('witnesses-container').innerHTML = createWitnessRow(1);
+                
+                localStorage.removeItem(STORAGE_KEY);
+                attachSaveListeners();
+                updatePreview();
+                showStatus('Formulário limpo!');
+            }
         });
         
         // Inicialização
         document.addEventListener('DOMContentLoaded', () => {
-            // Criar registros iniciais
             accusedCount = 1;
             victimCount = 1;
             witnessCount = 1;
@@ -1418,29 +1906,26 @@ Assinatura
             document.getElementById('victims-container').innerHTML = createVictimRow(1);
             document.getElementById('witnesses-container').innerHTML = createWitnessRow(1);
             
-            // Anexar listeners
             attachSaveListeners();
             
-            // Tentar carregar dados salvos
-            setTimeout(loadFromLocalStorage, 500);
-            
-            // Atualizar visualização inicial
-            updatePreview();
-            
-            // Adicionar evento de salvamento automático a campos principais
-            document.querySelectorAll('input, select, textarea').forEach(field => {
+            // Adicionar listeners aos campos principais
+            document.querySelectorAll('input, textarea, select').forEach(field => {
                 if (!field.classList.contains('save-field')) {
                     field.addEventListener('input', () => {
                         clearTimeout(window.saveTimeout);
-                        window.saveTimeout = setTimeout(saveToLocalStorage, 1000);
+                        window.saveTimeout = setTimeout(saveToLocalStorage, 500);
                     });
                 }
             });
             
-            // Salvar automaticamente quando a página for fechada
-            window.addEventListener('beforeunload', () => {
-                saveToLocalStorage();
-            });
+            // Tentar carregar dados salvos
+            setTimeout(loadFromLocalStorage, 100);
+            
+            // Atualizar visualização inicial
+            updatePreview();
+            
+            // Salvar ao fechar
+            window.addEventListener('beforeunload', saveToLocalStorage);
         });
     </script>
 </body>
