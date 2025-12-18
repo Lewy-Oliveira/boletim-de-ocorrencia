@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Boletim de Ocorrência</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background-color: #0a3d62;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 5px solid #f9ca24;
+        }
+        
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .app-content {
+            display: flex;
+            flex-wrap: wrap;
+            min-height: 600px;
+        }
+        
+        .form-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 25px;
+            background-color: #f9f9f9;
+            border-right: 1px solid #e0e0e0;
+        }
+        
+        .preview-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 25px;
+            background-color: #fff;
+            overflow-y: auto;
+            max-height: 750px;
+        }
+        
+        .section-title {
+            color: #0a3d62;
+            border-bottom: 2px solid #f9ca24;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #0a3d62;
+            box-shadow: 0 0 0 2px rgba(10, 61, 98, 0.2);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: #0a3d62;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #083354;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-secondary {
+            background-color: #f9ca24;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #f7b731;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-success {
+            background-color: #27ae60;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #219653;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-info {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-info:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pdf-preview {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            height: 600px;
+            overflow-y: auto;
+        }
+        
+        .boletim-header {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        .form-note {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        .required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+            white-space: nowrap;
+        }
+        
+        .tab.active {
+            background-color: white;
+            font-weight: 500;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .accused-row, .victim-row, .witness-row {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border-left: 4px solid #0a3d62;
+            position: relative;
+        }
+        
+        .accused-row {
+            border-left-color: #c0392b;
+        }
+        
+        .victim-row {
+            border-left-color: #27ae60;
+        }
+        
+        .witness-row {
+            border-left-color: #2980b9;
+        }
+        
+        .add-btn {
+            background-color: #27ae60;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .add-btn.accused {
+            background-color: #c0392b;
+        }
+        
+        .remove-btn {
+            background-color: #e74c3c;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .row-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .row-title {
+            font-weight: 500;
+            color: #0a3d62;
+        }
+        
+        .save-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            border-radius: 4px;
+            background-color: #27ae60;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .save-status.show {
+            opacity: 1;
+        }
+        
+        .save-status.error {
+            background-color: #e74c3c;
+        }
+        
+        @media (max-width: 768px) {
+            .app-content {
+                flex-direction: column;
+            }
+            
+            .form-section {
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .tabs {
+                overflow-x: auto;
+            }
+            
+            .tab {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            
+            .button-group button {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f1f1f1;
+            color: #666;
+            font-size: 14px;
+            margin-top: 30px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-file-contract"></i> Sistema de Boletim de Ocorrência</h1>
+            <p>Polícia Militar do Estado da Paraíba - 17º Batalhão de Polícia Militar</p>
+        </header>
+        
+        <div class="app-content">
+            <div class="form-section">
+                <div class="tabs">
+                    <div class="tab active" data-tab="main">Dados Principais</div>
+                    <div class="tab" data-tab="accused">Acusado(s)</div>
+                    <div class="tab" data-tab="victims">Vítima(s)</div>
+                    <div class="tab" data-tab="witnesses">Testemunha(s)</div>
+                    <div class="tab" data-tab="objects">Objetos</div>
+                    <div class="tab" data-tab="report">Relato</div>
+                </div>
+                
+                <div id="main-tab" class="tab-content active">
+                    <h3 class="section-title"><i class="fas fa-info-circle"></i> Informações da Ocorrência</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="data" class="required">Data</label>
+                            <input type="date" id="data" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="hora" class="required">Hora</label>
+                            <input type="time" id="hora" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="vtr">Viatura</label>
+                            <input type="text" id="vtr" placeholder="Ex: PM-1234">
+                        </div>
+                        <div class="form-group">
+                            <label for="cmt">Comandante</label>
+                            <input type="text" id="cmt" placeholder="Nome do comandante">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="solicitante">Solicitante</label>
+                            <input type="text" id="solicitante" placeholder="Nome do solicitante">
+                        </div>
+                        <div class="form-group">
+                            <label for="mat-solicitante">MAT.</label>
+                            <input type="text" id="mat-solicitante" placeholder="Matrícula do solicitante">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="endereco">Endereço da Ocorrência</label>
+                        <input type="text" id="endereco" placeholder="Endereço completo">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="telefone">Telefone</label>
+                            <input type="tel" id="telefone" placeholder="(83) 99999-9999">
+                        </div>
+                        <div class="form-group">
+                            <label for="classe">Classe da Ocorrência</label>
+                            <select id="classe">
+                                <option value="">Selecione</option>
+                                <option value="Roubo">Roubo</option>
+                                <option value="Furto">Furto</option>
+                                <option value="Ameaça">Ameaça</option>
+                                <option value="Lesão Corporal">Lesão Corporal</option>
+                                <option value="Tráfico">Tráfico</option>
+                                <option value="Outros">Outros</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="accused-tab" class="tab-content">
+                    <h3 class="section-title"><i class="fas fa-user-shield"></i> Acusado(s)</h3>
+                    <div id="accused-container">
+                        <!-- Acusados serão adicionados aqui dinamicamente -->
+                    </div>
+                    <button type="button" class="add-btn accused" id="add-accused">
+                        <i class="fas fa-plus"></i> Adicionar Acusado
+                    </button>
+                </div>
+                
+                <div id="victims-tab" class="tab-content">
+                    <h3 class="section-title"><i class="fas fa-user-injured"></i> Vítima(s)</h3>
+                    <div id="victims-container">
+                        <!-- Vítimas serão adicionadas aqui dinamicamente -->
+                    </div>
+                    <button type="button" class="add-btn" id="add-victim">
+                        <i class="fas fa-plus"></i> Adicionar Vítima
+                    </button>
+                </div>
+                
+                <div id="witnesses-tab" class="tab-content">
+                    <h3 class="section-title"><i class="fas fa-user-check"></i> Testemunha(s)</h3>
+                    <div id="witnesses-container">
+                        <!-- Testemunhas serão adicionadas aqui dinamicamente -->
+                    </div>
+                    <button type="button" class="add-btn" id="add-witness">
+                        <i class="fas fa-plus"></i> Adicionar Testemunha
+                    </button>
+                </div>
+                
+                <div id="objects-tab" class="tab-content">
+                    <h3 class="section-title"><i class="fas fa-box-open"></i> Objetos Apreendidos</h3>
+                    
+                    <div class="form-group">
+                        <label for="objetos">Descrição dos Objetos Apreendidos</label>
+                        <textarea id="objetos" placeholder="Descreva detalhadamente os objetos apreendidos..."></textarea>
+                        <div class="form-note">Separe cada objeto com ponto e vírgula (;)</div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="posto-grad">Posto/Graduação</label>
+                            <input type="text" id="posto-grad" placeholder="Ex: 2º SGT">
+                        </div>
+                        <div class="form-group">
+                            <label for="matricula">Matrícula</label>
+                            <input type="text" id="matricula" placeholder="Ex: 528 887.8">
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="report-tab" class="tab-content">
+                    <h3 class="section-title"><i class="fas fa-file-alt"></i> Relato da Ocorrência</h3>
+                    
+                    <div class="form-group">
+                        <label for="relato" class="required">Relato Detalhado</label>
+                        <textarea id="relato" placeholder="Descreva detalhadamente o ocorrido..." required></textarea>
+                        <div class="form-note">Descreva todos os fatos relevantes da ocorrência de forma clara e objetiva.</div>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button type="button" class="btn-success" id="save-local">
+                        <i class="fas fa-save"></i> Salvar Localmente
+                    </button>
+                    <button type="button" class="btn-info" id="load-local">
+                        <i class="fas fa-folder-open"></i> Carregar Dados
+                    </button>
+                    <button type="button" class="btn-secondary" id="clear-form">
+                        <i class="fas fa-eraser"></i> Limpar
+                    </button>
+                    <button type="button" class="btn-primary" id="generate-pdf">
+                        <i class="fas fa-file-pdf"></i> Gerar PDF
+                    </button>
+                </div>
+            </div>
+            
+            <div class="preview-section">
+                <h3 class="section-title"><i class="fas fa-eye"></i> Visualização do Boletim</h3>
+                <div class="pdf-preview" id="pdf-preview">
+                    <!-- O conteúdo do preview será gerado dinamicamente -->
+                </div>
+                <div class="button-group" style="margin-top: 20px;">
+                    <button type="button" class="btn-secondary" id="update-preview">
+                        <i class="fas fa-sync-alt"></i> Atualizar Visualização
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Sistema desenvolvido para o 17º Batalhão de Polícia Militar da Paraíba</p>
+            <p>© 2023 - Todos os direitos reservados | Dados salvos localmente no navegador</p>
+        </footer>
+    </div>
+
+    <!-- Elemento para mostrar status de salvamento -->
+    <div class="save-status" id="save-status">Dados salvos com sucesso!</div>
+
+    <script>
+        // Variáveis globais
+        let accusedCount = 0;
+        let victimCount = 0;
+        let witnessCount = 0;
+        const STORAGE_KEY = 'boletim_ocorrencia_data';
+        
+        // Função para alternar entre abas
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove a classe active de todas as abas
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Adiciona a classe active à aba clicada
+                tab.classList.add('active');
+                
+                // Mostra o conteúdo correspondente
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
+        
+        // Função para mostrar mensagem de status
+        function showStatus(message, isError = false) {
+            const statusElement = document.getElementById('save-status');
+            statusElement.textContent = message;
+            statusElement.classList.toggle('error', isError);
+            statusElement.classList.add('show');
+            
+            setTimeout(() => {
+                statusElement.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Função para criar um novo acusado
+        function createAccusedRow(id) {
+            return `
+                <div class="accused-row" data-id="${id}">
+                    <div class="row-header">
+                        <span class="row-title">Acusado #${id}</span>
+                        <button type="button" class="remove-btn" onclick="removeAccused(${id})">
+                            <i class="fas fa-trash"></i> Remover
+                        </button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="acusado-nome-${id}">Nome do Acusado</label>
+                            <input type="text" id="acusado-nome-${id}" placeholder="Nome completo" class="save-field">
+                        </div>
+                        <div class="form-group">
+                            <label for="acusado-genitora-${id}">Genitora</label>
+                            <input type="text" id="acusado-genitora-${id}" placeholder="Nome da mãe" class="save-field">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="acusado-nascimento-${id}">Data de Nascimento</label>
+                            <input type="date" id="acusado-nascimento-${id}" class="save-field">
+                        </div>
+                        <div class="form-group">
+                            <label for="acusado-rg-${id}">RG</label>
+                            <input type="text" id="acusado-rg-${id}" placeholder="Número do RG" class="save-field">
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Função para criar uma nova vítima
+        function createVictimRow(id) {
+            return `
+                <div class="victim-row" data-id="${id}">
+                    <div class="row-header">
+                        <span class="row-title">Vítima #${id}</span>
+                        <button type="button" class="remove-btn" onclick="removeVictim(${id})">
+                            <i class="fas fa-trash"></i> Remover
+                        </button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="vitima-nome-${id}">Nome</label>
+                            <input type="text" id="vitima-nome-${id}" placeholder="Nome completo" class="save-field">
+                        </div>
+                        <div class="form-group">
+                            <label for="vitima-idade-${id}">Idade</label>
+                            <input type="number" id="vitima-idade-${id}" placeholder="Idade" class="save-field">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vitima-endereco-${id}">Endereço</label>
+                        <input type="text" id="vitima-endereco-${id}" placeholder="Endereço completo" class="save-field">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="vitima-nascimento-${id}">Data de Nascimento</label>
+                            <input type="date" id="vitima-nascimento-${id}" class="save-field">
+                        </div>
+                        <div class="form-group">
+                            <label for="vitima-profissao-${id}">Profissão</label>
+                            <input type="text" id="vitima-profissao-${id}" placeholder="Profissão" class="save-field">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="vitima-rg-${id}">RG</label>
+                            <input type="text" id="vitima-rg-${id}" placeholder="Número do RG" class="save-field">
+                        </div>
+                        <div class="form-group">
+                            <label for="vitima-cpf-${id}">CPF</label>
+                            <input type="text" id="vitima-cpf-${id}" placeholder="CPF" class="save-field">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vitima-mae-${id}">Nome da Mãe</label>
+                            <input type="text" id="vitima-mae-${id}" placeholder="Nome completo da mãe" class="save-field">
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Função para criar uma nova testemunha
+        function createWitnessRow(id) {
+            return `
+                <div class="witness-row" data-id="${id}">
+                    <div class="row-header">
+                        <span class="row-title">Testemunha #${id}</span>
+                        <button type="button" class="remove-btn" onclick="removeWitness(${id})">
+                            <i class="fas fa-trash"></i> Remover
+                        </button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="testemunha-nome-${id}">Nome</label>
+                            <input type="text" id="testemunha-nome-${id}" placeholder="Nome completo" class="save-field">
+                        </div>
+                        <div class="form-group">
+                            <label for="testemunha-idade-${id}">Idade</label>
+                            <input type="number" id="testemunha-idade-${id}" placeholder="Idade" class="save-field">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="testemunha-genitora-${id}">Genitora</label>
+                            <input type="text" id="testemunha-genitora-${id}" placeholder="Nome da mãe" class="save-field">
+                        </div>
+                        <div class="form-group">
+                            <label for="testemunha-nascimento-${id}">Data de Nascimento</label>
+                            <input type="date" id="testemunha-nascimento-${id}" class="save-field">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="testemunha-profissao-${id}">Profissão</label>
+                            <input type="text" id="testemunha-profissao-${id}" placeholder="Profissão" class="save-field">
+                        </div>
+                        <div class="form-group">
+                            <label for="testemunha-rg-${id}">RG</label>
+                            <input type="text" id="testemunha-rg-${id}" placeholder="Número do RG" class="save-field">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="testemunha-endereco-${id}">Endereço</label>
+                            <input type="text" id="testemunha-endereco-${id}" placeholder="Endereço completo" class="save-field">
+                        </div>
+                        <div class="form-group">
+                            <label for="testemunha-telefone-${id}">Telefone</label>
+                            <input type="tel" id="testemunha-telefone-${id}" placeholder="(83) 99999-9999" class="save-field">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="testemunha-cpf-${id}">CPF</label>
+                        <input type="text" id="testemunha-cpf-${id}" placeholder="CPF" class="save-field">
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Funções para remover elementos
+        window.removeAccused = function(id) {
+            document.querySelector(`.accused-row[data-id="${id}"]`).remove();
+        };
+        
+        window.removeVictim = function(id) {
+            document.querySelector(`.victim-row[data-id="${id}"]`).remove();
+        };
+        
+        window.removeWitness = function(id) {
+            document.querySelector(`.witness-row[data-id="${id}"]`).remove();
+        };
+        
+        // Adicionar novo acusado
+        document.getElementById('add-accused').addEventListener('click', () => {
+            accusedCount++;
+            const container = document.getElementById('accused-container');
+            container.insertAdjacentHTML('beforeend', createAccusedRow(accusedCount));
+            attachSaveListeners();
+        });
+        
+        // Adicionar nova vítima
+        document.getElementById('add-victim').addEventListener('click', () => {
+            victimCount++;
+            const container = document.getElementById('victims-container');
+            container.insertAdjacentHTML('beforeend', createVictimRow(victimCount));
+            attachSaveListeners();
+        });
+        
+        // Adicionar nova testemunha
+        document.getElementById('add-witness').addEventListener('click', () => {
+            witnessCount++;
+            const container = document.getElementById('witnesses-container');
+            container.insertAdjacentHTML('beforeend', createWitnessRow(witnessCount));
+            attachSaveListeners();
+        });
+        
+        // Função para formatar data
+        function formatDate(dateString) {
+            if (!dateString) return "";
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR');
+        }
+        
+        // Função para formatar hora
+        function formatTime(timeString) {
+            if (!timeString) return "";
+            return timeString.substring(0, 5);
+        }
+        
+        // Função para coletar todos os dados do formulário
+        function collectFormData() {
+            const data = {
+                // Dados principais
+                data: document.getElementById('data').value,
+                hora: document.getElementById('hora').value,
+                vtr: document.getElementById('vtr').value,
+                cmt: document.getElementById('cmt').value,
+                solicitante: document.getElementById('solicitante').value,
+                matSolicitante: document.getElementById('mat-solicitante').value,
+                endereco: document.getElementById('endereco').value,
+                telefone: document.getElementById('telefone').value,
+                classe: document.getElementById('classe').value,
+                objetos: document.getElementById('objetos').value,
+                relato: document.getElementById('relato').value,
+                postoGrad: document.getElementById('posto-grad').value,
+                matricula: document.getElementById('matricula').value,
+                
+                // Contadores
+                accusedCount: accusedCount,
+                victimCount: victimCount,
+                witnessCount: witnessCount,
+                
+                // Acusados
+                accused: [],
+                // Vítimas
+                victims: [],
+                // Testemunhas
+                witnesses: []
+            };
+            
+            // Coletar acusados
+            for (let i = 1; i <= accusedCount; i++) {
+                const nome = document.getElementById(`acusado-nome-${i}`);
+                if (nome) {
+                    data.accused.push({
+                        nome: nome.value,
+                        genitora: document.getElementById(`acusado-genitora-${i}`)?.value || "",
+                        nascimento: document.getElementById(`acusado-nascimento-${i}`)?.value || "",
+                        rg: document.getElementById(`acusado-rg-${i}`)?.value || ""
+                    });
+                }
+            }
+            
+            // Coletar vítimas
+            for (let i = 1; i <= victimCount; i++) {
+                const nome = document.getElementById(`vitima-nome-${i}`);
+                if (nome) {
+                    data.victims.push({
+                        nome: nome.value,
+                        idade: document.getElementById(`vitima-idade-${i}`)?.value || "",
+                        endereco: document.getElementById(`vitima-endereco-${i}`)?.value || "",
+                        nascimento: document.getElementById(`vitima-nascimento-${i}`)?.value || "",
+                        profissao: document.getElementById(`vitima-profissao-${i}`)?.value || "",
+                        rg: document.getElementById(`vitima-rg-${i}`)?.value || "",
+                        cpf: document.getElementById(`vitima-cpf-${i}`)?.value || "",
+                        mae: document.getElementById(`vitima-mae-${i}`)?.value || ""
+                    });
+                }
+            }
+            
+            // Coletar testemunhas
+            for (let i = 1; i <= witnessCount; i++) {
+                const nome = document.getElementById(`testemunha-nome-${i}`);
+                if (nome) {
+                    data.witnesses.push({
+                        nome: nome.value,
+                        idade: document.getElementById(`testemunha-idade-${i}`)?.value || "",
+                        genitora: document.getElementById(`testemunha-genitora-${i}`)?.value || "",
+                        nascimento: document.getElementById(`testemunha-nascimento-${i}`)?.value || "",
+                        profissao: document.getElementById(`testemunha-profissao-${i}`)?.value || "",
+                        rg: document.getElementById(`testemunha-rg-${i}`)?.value || "",
+                        cpf: document.getElementById(`testemunha-cpf-${i}`)?.value || "",
+                        endereco: document.getElementById(`testemunha-endereco-${i}`)?.value || "",
+                        telefone: document.getElementById(`testemunha-telefone-${i}`)?.value || ""
+                    });
+                }
+            }
+            
+            return data;
+        }
+        
+        // Função para salvar dados localmente
+        function saveToLocalStorage() {
+            try {
+                const formData = collectFormData();
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+                showStatus('Dados salvos com sucesso!');
+                return true;
+            } catch (error) {
+                showStatus('Erro ao salvar dados: ' + error.message, true);
+                return false;
+            }
+        }
+        
+        // Função para carregar dados do localStorage
+        function loadFromLocalStorage() {
+            try {
+                const savedData = localStorage.getItem(STORAGE_KEY);
+                if (!savedData) {
+                    showStatus('Nenhum dado salvo encontrado.', true);
+                    return false;
+                }
+                
+                const data = JSON.parse(savedData);
+                
+                // Carregar dados principais
+                document.getElementById('data').value = data.data || '';
+                document.getElementById('hora').value = data.hora || '';
+                document.getElementById('vtr').value = data.vtr || '';
+                document.getElementById('cmt').value = data.cmt || '';
+                document.getElementById('solicitante').value = data.solicitante || '';
+                document.getElementById('mat-solicitante').value = data.matSolicitante || '';
+                document.getElementById('endereco').value = data.endereco || '';
+                document.getElementById('telefone').value = data.telefone || '';
+                document.getElementById('classe').value = data.classe || '';
+                document.getElementById('objetos').value = data.objetos || '';
+                document.getElementById('relato').value = data.relato || '';
+                document.getElementById('posto-grad').value = data.postoGrad || '';
+                document.getElementById('matricula').value = data.matricula || '';
+                
+                // Limpar containers
+                document.getElementById('accused-container').innerHTML = '';
+                document.getElementById('victims-container').innerHTML = '';
+                document.getElementById('witnesses-container').innerHTML = '';
+                
+                // Restaurar contadores
+                accusedCount = data.accusedCount || 0;
+                victimCount = data.victimCount || 0;
+                witnessCount = data.witnessCount || 0;
+                
+                // Restaurar acusados
+                if (data.accused && data.accused.length > 0) {
+                    data.accused.forEach((accused, index) => {
+                        accusedCount = Math.max(accusedCount, index + 1);
+                        document.getElementById('accused-container').insertAdjacentHTML('beforeend', createAccusedRow(index + 1));
+                        
+                        // Preencher dados
+                        document.getElementById(`acusado-nome-${index + 1}`).value = accused.nome || '';
+                        document.getElementById(`acusado-genitora-${index + 1}`).value = accused.genitora || '';
+                        document.getElementById(`acusado-nascimento-${index + 1}`).value = accused.nascimento || '';
+                        document.getElementById(`acusado-rg-${index + 1}`).value = accused.rg || '';
+                    });
+                }
+                
+                // Restaurar vítimas
+                if (data.victims && data.victims.length > 0) {
+                    data.victims.forEach((victim, index) => {
+                        victimCount = Math.max(victimCount, index + 1);
+                        document.getElementById('victims-container').insertAdjacentHTML('beforeend', createVictimRow(index + 1));
+                        
+                        // Preencher dados
+                        document.getElementById(`vitima-nome-${index + 1}`).value = victim.nome || '';
+                        document.getElementById(`vitima-idade-${index + 1}`).value = victim.idade || '';
+                        document.getElementById(`vitima-endereco-${index + 1}`).value = victim.endereco || '';
+                        document.getElementById(`vitima-nascimento-${index + 1}`).value = victim.nascimento || '';
+                        document.getElementById(`vitima-profissao-${index + 1}`).value = victim.profissao || '';
+                        document.getElementById(`vitima-rg-${index + 1}`).value = victim.rg || '';
+                        document.getElementById(`vitima-cpf-${index + 1}`).value = victim.cpf || '';
+                        document.getElementById(`vitima-mae-${index + 1}`).value = victim.mae || '';
+                    });
+                }
+                
+                // Restaurar testemunhas
+                if (data.witnesses && data.witnesses.length > 0) {
+                    data.witnesses.forEach((witness, index) => {
+                        witnessCount = Math.max(witnessCount, index + 1);
+                        document.getElementById('witnesses-container').insertAdjacentHTML('beforeend', createWitnessRow(index + 1));
+                        
+                        // Preencher dados
+                        document.getElementById(`testemunha-nome-${index + 1}`).value = witness.nome || '';
+                        document.getElementById(`testemunha-idade-${index + 1}`).value = witness.idade || '';
+                        document.getElementById(`testemunha-genitora-${index + 1}`).value = witness.genitora || '';
+                        document.getElementById(`testemunha-nascimento-${index + 1}`).value = witness.nascimento || '';
+                        document.getElementById(`testemunha-profissao-${index + 1}`).value = witness.profissao || '';
+                        document.getElementById(`testemunha-rg-${index + 1}`).value = witness.rg || '';
+                        document.getElementById(`testemunha-cpf-${index + 1}`).value = witness.cpf || '';
+                        document.getElementById(`testemunha-endereco-${index + 1}`).value = witness.endereco || '';
+                        document.getElementById(`testemunha-telefone-${index + 1}`).value = witness.telefone || '';
+                    });
+                }
+                
+                // Se não houver nenhum registro, criar um vazio
+                if (accusedCount === 0) {
+                    accusedCount = 1;
+                    document.getElementById('accused-container').innerHTML = createAccusedRow(1);
+                }
+                
+                if (victimCount === 0) {
+                    victimCount = 1;
+                    document.getElementById('victims-container').innerHTML = createVictimRow(1);
+                }
+                
+                if (witnessCount === 0) {
+                    witnessCount = 1;
+                    document.getElementById('witnesses-container').innerHTML = createWitnessRow(1);
+                }
+                
+                attachSaveListeners();
+                updatePreview();
+                showStatus('Dados carregados com sucesso!');
+                return true;
+            } catch (error) {
+                showStatus('Erro ao carregar dados: ' + error.message, true);
+                return false;
+            }
+        }
+        
+        // Função para anexar listeners de salvamento automático
+        function attachSaveListeners() {
+            // Adicionar evento de input a todos os campos
+            document.querySelectorAll('.save-field').forEach(field => {
+                if (!field.hasAttribute('data-save-listener')) {
+                    field.setAttribute('data-save-listener', 'true');
+                    field.addEventListener('input', () => {
+                        // Salvar após um pequeno delay para evitar muitas chamadas
+                        clearTimeout(window.saveTimeout);
+                        window.saveTimeout = setTimeout(saveToLocalStorage, 1000);
+                    });
+                }
+            });
+        }
+        
+        // Função para atualizar a visualização
+        function updatePreview() {
+            const data = collectFormData();
+            
+            // Gerar string de acusados
+            let acusadosStr = "";
+            data.accused.forEach(acc => {
+                acusadosStr += `ACUSADO: ${acc.nome} GENITORA: ${acc.genitora} DATA DE NASCIMENTO: ${formatDate(acc.nascimento)} RG : ${acc.rg}\n`;
+            });
+            
+            // Gerar string de vítimas
+            let vitimasStr = "";
+            data.victims.forEach(vit => {
+                vitimasStr += `Nome: ${vit.nome} || Idade: ${vit.idade}\n`;
+                vitimasStr += `End.: ${vit.endereco} || DATA DE NASCIMENTO.: ${formatDate(vit.nascimento)}\n`;
+                vitimasStr += `Profissão: ${vit.profissao} | RG: ${vit.rg} | CPF: ${vit.cpf}\n`;
+                vitimasStr += `Nome da Mãe: ${vit.mae}\n\n`;
+            });
+            
+            // Gerar string de testemunhas
+            let testemunhasStr = "";
+            data.witnesses.forEach(test => {
+                testemunhasStr += `Nome: ${test.nome} || Idade: ${test.idade}\n`;
+                testemunhasStr += `GENITORA.: ${test.genitora} || DATA DE NASCIMENTO: ${formatDate(test.nascimento)}\n`;
+                testemunhasStr += `Profissão: ${test.profissao} | RG: ${test.rg} | CPF: ${test.cpf}\n`;
+                testemunhasStr += `Nome: ${test.nome} || DN: ${formatDate(test.nascimento)}\n`;
+                testemunhasStr += `End.: ${test.endereco} || Tel: ${test.telefone}\n`;
+                testemunhasStr += `Profissão: ${test.profissao} | RG.: ${test.rg} | CPF: ${test.cpf}\n\n`;
+            });
+            
+            // Gerar visualização
+            const preview = document.getElementById('pdf-preview');
+            preview.innerHTML = `
+POLÍCIA MILITAR DO ESTADO DA PARAÍBA
+
+COMANDO DO POLICIAMENTO DA REGIÃO METROPOLITANA
+
+17º BATALHÃO DE POLÍCIA MILITAR
+
+BOLETIM DE OCORRÊNCIA POLICIAL
+
+|Data: ${formatDate(data.data)}|Hora: ${formatTime(data.hora)}|Vtr.: ${data.vtr}|Cmt.: ${data.cmt}|
+|---|---|---|---|
+|Solicitante: ${data.solicitante}|||MAT.: ${data.matSolicitante}|
+|End.: ${data.endereco}|||Tel.: ${data.telefone}|
+|Ocorrência: ${data.classe}|||Classe: ${data.classe}|
+${acusadosStr}
+|VÍTIMA (S)||||
+|---|---|---|---|
+${vitimasStr}
+|TESTEMUNHA(S)|
+${testemunhasStr}
+|Objetos apreendidos: ${data.objetos}||
+
+POSTO/GRAD.: ${data.postoGrad} MAT: ${data.matricula}
+
+RELATO:
+${data.relato}
+
+Assinatura
+
+| RECIBO    | Recebi às ______ horas, do dia ______/______/______ os acusado(s) e/ou arma(s) e/ou objeto(s) descritos neste documento. |
+|---|---|
+| Nome Legível    | Assinatura e Matrícula do Recebedor |
+`;
+        }
+        
+        // Atualizar visualização ao clicar no botão
+        document.getElementById('update-preview').addEventListener('click', updatePreview);
+        
+        // Salvar dados localmente
+        document.getElementById('save-local').addEventListener('click', saveToLocalStorage);
+        
+        // Carregar dados do localStorage
+        document.getElementById('load-local').addEventListener('click', loadFromLocalStorage);
+        
+        // Limpar formulário
+        document.getElementById('clear-form').addEventListener('click', () => {
+            if (confirm('Tem certeza que deseja limpar todos os campos do formulário? Isso também apagará os dados salvos localmente.')) {
+                // Limpar campos principais
+                document.querySelectorAll('input, select, textarea').forEach(element => {
+                    element.value = '';
+                });
+                
+                // Limpar containers
+                document.getElementById('accused-container').innerHTML = '';
+                document.getElementById('victims-container').innerHTML = '';
+                document.getElementById('witnesses-container').innerHTML = '';
+                
+                // Resetar contadores
+                accusedCount = 0;
+                victimCount = 0;
+                witnessCount = 0;
+                
+                // Adicionar um registro vazio para cada
+                accusedCount = 1;
+                victimCount = 1;
+                witnessCount = 1;
+                
+                document.getElementById('accused-container').innerHTML = createAccusedRow(1);
+                document.getElementById('victims-container').innerHTML = createVictimRow(1);
+                document.getElementById('witnesses-container').innerHTML = createWitnessRow(1);
+                
+                // Limpar localStorage
+                localStorage.removeItem(STORAGE_KEY);
+                
+                attachSaveListeners();
+                updatePreview();
+                showStatus('Formulário limpo e dados locais removidos!');
+            }
+        });
+        
+        // Função para adicionar nova página se necessário
+        function addNewPageIfNeeded(doc, yPos, margin = 20) {
+            const pageHeight = doc.internal.pageSize.height;
+            if (yPos > pageHeight - margin) {
+                doc.addPage();
+                return margin; // Retorna a posição Y inicial da nova página
+            }
+            return yPos;
+        }
+        
+        // Função para desenhar o recibo com altura maior e "descritos neste documento" alinhado com "RECIBO"
+        function drawReceipt(doc, yPos) {
+            const reciboAltura = 60; // Altura aumentada do recibo
+            const linhaAltura = reciboAltura / 2; // 30 pixels para cada linha
+            
+            // Desenhar a tabela do recibo
+            doc.setLineWidth(0.5);
+            doc.rect(10, yPos, 190, reciboAltura);
+            
+            // Linha vertical dividindo a tabela
+            doc.line(60, yPos, 60, yPos + reciboAltura);
+            
+            // Linha horizontal dividindo as duas linhas
+            doc.line(10, yPos + linhaAltura, 200, yPos + linhaAltura);
+            
+            // PRIMEIRA LINHA DO RECIBO
+            // "RECIBO" na primeira célula (esquerda) - centralizado verticalmente
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "bold");
+            doc.text("RECIBO", 35, yPos + (linhaAltura / 2), { align: "center" });
+            
+            // Texto do recebimento na segunda célula (direita)
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            
+            // Primeira parte do texto (mais acima)
+            doc.text("Recebi às ______ horas, do dia ______/______/______", 
+                     125, yPos + 10, { align: "center", maxWidth: 130 });
+            
+            // Segunda parte do texto
+            doc.text("os acusado(s) e/ou arma(s) e/ou objeto(s)", 
+                     125, yPos + 18, { align: "center", maxWidth: 130 });
+            
+            // "descritos neste documento." na mesma linha que "RECIBO"
+            doc.text("descritos neste documento.", 
+                     125, yPos + 26, { align: "center", maxWidth: 130 });
+            
+            // SEGUNDA LINHA DO RECIBO
+            // Calcular posição Y para centralizar verticalmente na segunda linha
+            const segundaAltura = yPos + linhaAltura + (linhaAltura / 2);
+            
+            doc.text("Nome Legível", 35, segundaAltura, { align: "center" });
+            doc.text("Assinatura e Matrícula do Recebedor", 125, segundaAltura, { align: "center" });
+            
+            return yPos + reciboAltura + 10; // Retorna nova posição Y com margem
+        }
+        
+        // Gerar PDF
+        document.getElementById('generate-pdf').addEventListener('click', async () => {
+            // Validar campos obrigatórios
+            const requiredFields = ['data', 'hora', 'relato'];
+            let missingFields = [];
+            
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    missingFields.push(field.previousElementSibling.textContent.replace(' *', ''));
+                }
+            });
+            
+            if (missingFields.length > 0) {
+                showStatus(`Preencha os campos obrigatórios: ${missingFields.join(', ')}`, true);
+                return;
+            }
+            
+            // Atualizar visualização antes de gerar PDF
+            updatePreview();
+            
+            // Usar jsPDF para gerar o PDF
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Configurar fonte e tamanho
+            doc.setFont("helvetica");
+            doc.setFontSize(12);
+            
+            // Coletar dados
+            const data = collectFormData();
+            
+            // Posição Y inicial
+            let yPos = 20;
+            
+            // Adicionar cabeçalho
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.text("POLÍCIA MILITAR DO ESTADO DA PARAÍBA", 105, yPos, { align: "center" });
+            yPos += 7;
+            doc.text("COMANDO DO POLICIAMENTO DA REGIÃO METROPOLITANA", 105, yPos, { align: "center" });
+            yPos += 7;
+            doc.text("17º BATALHÃO DE POLÍCIA MILITAR", 105, yPos, { align: "center" });
+            yPos += 7;
+            doc.text("BOLETIM DE OCORRÊNCIA POLICIAL", 105, yPos, { align: "center" });
+            yPos += 10;
+            
+            // Desenhar tabela superior
+            doc.setLineWidth(0.5);
+            doc.rect(10, yPos, 190, 40);
+            doc.line(60, yPos, 60, yPos + 40); // Linha vertical 1
+            doc.line(110, yPos, 110, yPos + 40); // Linha vertical 2
+            doc.line(160, yPos, 160, yPos + 40); // Linha vertical 3
+            doc.line(10, yPos + 10, 200, yPos + 10); // Linha horizontal 1
+            doc.line(10, yPos + 20, 200, yPos + 20); // Linha horizontal 2
+            doc.line(10, yPos + 30, 200, yPos + 30); // Linha horizontal 3
+            
+            // Adicionar texto na tabela superior
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            
+            // Preencher tabela superior
+            doc.text("Data:", 12, yPos + 5);
+            doc.text(formatDate(data.data), 25, yPos + 5);
+            
+            doc.text("Hora:", 62, yPos + 5);
+            doc.text(formatTime(data.hora), 75, yPos + 5);
+            
+            doc.text("Vtr.:", 112, yPos + 5);
+            doc.text(data.vtr, 130, yPos + 5);
+            
+            doc.text("Cmt.:", 162, yPos + 5);
+            doc.text(data.cmt, 175, yPos + 5);
+            
+            doc.text("Solicitante:", 12, yPos + 15);
+            doc.text(data.solicitante, 40, yPos + 15);
+            
+            doc.text("MAT.:", 162, yPos + 15);
+            doc.text(data.matSolicitante, 175, yPos + 15);
+            
+            doc.text("End.:", 12, yPos + 25);
+            doc.text(data.endereco, 25, yPos + 25);
+            
+            doc.text("Tel.:", 162, yPos + 25);
+            doc.text(data.telefone, 175, yPos + 25);
+            
+            doc.text("Ocorrência:", 12, yPos + 35);
+            doc.text(data.classe, 40, yPos + 35);
+            
+            doc.text("Classe:", 112, yPos + 35);
+            doc.text(data.classe, 130, yPos + 35);
+            
+            yPos += 50;
+            
+            // Verificar se precisa de nova página
+            yPos = addNewPageIfNeeded(doc, yPos, 30);
+            
+            // Seção do(s) acusado(s)
+            data.accused.forEach(acc => {
+                if (acc.nome) {
+                    yPos = addNewPageIfNeeded(doc, yPos, 30);
+                    doc.text(`ACUSADO: ${acc.nome} GENITORA: ${acc.genitora} DATA DE NASCIMENTO: ${formatDate(acc.nascimento)} RG : ${acc.rg}`, 10, yPos);
+                    yPos += 8;
+                }
+            });
+            
+            // Ajustar posição se não houver acusados
+            if (yPos < 80) yPos = 80;
+            
+            // Verificar se precisa de nova página antes da tabela de vítimas
+            yPos = addNewPageIfNeeded(doc, yPos, 60);
+            
+            // Tabela de vítimas
+            doc.rect(10, yPos, 190, 60);
+            doc.text("VÍTIMA (S)", 12, yPos + 5);
+            
+            // Adicionar vítimas
+            let victimY = yPos + 15;
+            data.victims.forEach(vit => {
+                if (vit.nome && victimY < yPos + 50) {
+                    doc.text(`Nome: ${vit.nome} || Idade: ${vit.idade}`, 12, victimY);
+                    victimY += 6;
+                    doc.text(`End.: ${vit.endereco} || DATA DE NASCIMENTO.: ${formatDate(vit.nascimento)}`, 12, victimY);
+                    victimY += 6;
+                    doc.text(`Profissão: ${vit.profissao} | RG: ${vit.rg} | CPF: ${vit.cpf}`, 12, victimY);
+                    victimY += 6;
+                    doc.text(`Nome da Mãe: ${vit.mae}`, 12, victimY);
+                    victimY += 10;
+                }
+            });
+            
+            yPos += 65;
+            
+            // Verificar se precisa de nova página antes da tabela de testemunhas
+            yPos = addNewPageIfNeeded(doc, yPos, 80);
+            
+            // Tabela de testemunhas
+            doc.rect(10, yPos, 190, 60);
+            doc.text("TESTEMUNHA(S)", 12, yPos + 5);
+            
+            // Adicionar testemunhas
+            let witnessY = yPos + 15;
+            data.witnesses.forEach(test => {
+                if (test.nome && witnessY < yPos + 50) {
+                    doc.text(`Nome: ${test.nome} || Idade: ${test.idade}`, 12, witnessY);
+                    witnessY += 5;
+                    doc.text(`GENITORA.: ${test.genitora} || DATA DE NASCIMENTO: ${formatDate(test.nascimento)}`, 12, witnessY);
+                    witnessY += 5;
+                    doc.text(`Profissão: ${test.profissao} | RG: ${test.rg} | CPF: ${test.cpf}`, 12, witnessY);
+                    witnessY += 5;
+                    doc.text(`Nome: ${test.nome} || DN: ${formatDate(test.nascimento)}`, 12, witnessY);
+                    witnessY += 5;
+                    doc.text(`End.: ${test.endereco} || Tel: ${test.telefone}`, 12, witnessY);
+                    witnessY += 5;
+                    doc.text(`Profissão: ${test.profissao} | RG.: ${test.rg} | CPF: ${test.cpf}`, 12, witnessY);
+                    witnessY += 10;
+                }
+            });
+            
+            yPos += 65;
+            
+            // Verificar se precisa de nova página antes dos objetos
+            yPos = addNewPageIfNeeded(doc, yPos, 40);
+            
+            // Objetos apreendidos
+            doc.text(`Objetos apreendidos: ${data.objetos}`, 10, yPos);
+            yPos += 10;
+            
+            // Verificar se precisa de nova página antes da assinatura
+            yPos = addNewPageIfNeeded(doc, yPos, 50);
+            
+            // Assinatura
+            doc.text(`POSTO/GRAD.: ${data.postoGrad} MAT: ${data.matricula}`, 10, yPos);
+            yPos += 10;
+            
+            doc.text("RELATO:", 10, yPos);
+            yPos += 10;
+            
+            // Adicionar relato com quebra de linha e verificação de página
+            const relatoLines = doc.splitTextToSize(data.relato, 180);
+            for (let i = 0; i < relatoLines.length; i++) {
+                yPos = addNewPageIfNeeded(doc, yPos, 20);
+                doc.text(relatoLines[i], 10, yPos);
+                yPos += 6;
+            }
+            
+            yPos = addNewPageIfNeeded(doc, yPos, 60); // Margem maior para o recibo
+            doc.text("Assinatura", 10, yPos);
+            
+            // Verificar se precisa de nova página antes do recibo
+            yPos = addNewPageIfNeeded(doc, yPos + 15, 70); // Margem de 70 pixels
+            
+            // Desenhar o recibo conforme a imagem anexada
+            yPos = drawReceipt(doc, yPos);
+            
+            // Salvar PDF
+            const fileName = `boletim_ocorrencia_${formatDate(data.data).replace(/\//g, '_')}_${formatTime(data.hora).replace(/:/g, '')}.pdf`;
+            doc.save(fileName);
+            
+            showStatus('PDF gerado com sucesso!');
+        });
+        
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            // Criar registros iniciais
+            accusedCount = 1;
+            victimCount = 1;
+            witnessCount = 1;
+            
+            document.getElementById('accused-container').innerHTML = createAccusedRow(1);
+            document.getElementById('victims-container').innerHTML = createVictimRow(1);
+            document.getElementById('witnesses-container').innerHTML = createWitnessRow(1);
+            
+            // Anexar listeners
+            attachSaveListeners();
+            
+            // Tentar carregar dados salvos
+            setTimeout(loadFromLocalStorage, 500);
+            
+            // Atualizar visualização inicial
+            updatePreview();
+            
+            // Adicionar evento de salvamento automático a campos principais
+            document.querySelectorAll('input, select, textarea').forEach(field => {
+                if (!field.classList.contains('save-field')) {
+                    field.addEventListener('input', () => {
+                        clearTimeout(window.saveTimeout);
+                        window.saveTimeout = setTimeout(saveToLocalStorage, 1000);
+                    });
+                }
+            });
+            
+            // Salvar automaticamente quando a página for fechada
+            window.addEventListener('beforeunload', () => {
+                saveToLocalStorage();
+            });
+        });
+    </script>
+</body>
+</html>
