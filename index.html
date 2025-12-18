@@ -528,7 +528,7 @@
     <div class="container">
         <header>
             <h1><i class="fas fa-file-contract"></i> Sistema de Boletim de Ocorrência</h1>
-            <p>Polícia Militar do Estado da Paraíba - 17º Batalhão de Polícia Militar</p>
+            <p>Polícia Militar - Sistema de Geração de Boletins</p>
         </header>
         
         <div class="app-content">
@@ -545,96 +545,106 @@
                 <div id="main-tab" class="tab-content active">
                     <h3 class="section-title"><i class="fas fa-info-circle"></i> Informações da Ocorrência</h3>
                     
+                    <div class="form-group">
+                        <label for="comando-regional">Comando de Policiamento Regional</label>
+                        <input type="text" id="comando-regional" placeholder="Ex: COMANDO DE POLICIAMENTO REGIONAL III - CPRIII" class="save-field" value="COMANDO DE POLICIAMENTO REGIONAL III - CPRIII">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="batalhao">Batalhão de Polícia Militar</label>
+                        <input type="text" id="batalhao" placeholder="Ex: 17º BATALHÃO DE POLÍCIA MILITAR" class="save-field" value="17º BATALHÃO DE POLÍCIA MILITAR">
+                    </div>
+                    
                     <div class="form-row">
                         <div class="form-group">
                             <label for="bo-num" class="required">Nº BO</label>
-                            <input type="text" id="bo-num" placeholder="Número do BO" required>
+                            <input type="text" id="bo-num" placeholder="Número do BO" required class="save-field">
                         </div>
                         <div class="form-group">
                             <label for="ciop">Nº CIOP</label>
-                            <input type="text" id="ciop" placeholder="Número CIOP">
+                            <input type="text" id="ciop" placeholder="Número CIOP" class="save-field">
                         </div>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
                             <label for="uop">UOp/SUOp</label>
-                            <input type="text" id="uop" placeholder="Unidade Operacional">
+                            <input type="text" id="uop" placeholder="Unidade Operacional" class="save-field">
                         </div>
                         <div class="form-group">
                             <label for="data" class="required">Data</label>
-                            <input type="date" id="data" required>
+                            <input type="date" id="data" required class="save-field">
                         </div>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
                             <label for="hora" class="required">Hora</label>
-                            <input type="time" id="hora" required>
+                            <input type="time" id="hora" required class="save-field">
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label for="endereco">Endereço da Ocorrência</label>
-                        <input type="text" id="endereco" placeholder="Rua, Bairro, Cidade e Nº">
+                        <input type="text" id="endereco" placeholder="Rua, Bairro, Cidade e Nº" class="save-field">
                     </div>
                     
                     <div class="form-group">
                         <label for="ponto-ref">Ponto de Referência</label>
-                        <input type="text" id="ponto-ref" placeholder="Ponto de referência">
+                        <input type="text" id="ponto-ref" placeholder="Ponto de referência" class="save-field">
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
                             <label for="natureza">Natureza da Ocorrência</label>
-                            <input type="text" id="natureza" placeholder="Natureza da ocorrência">
+                            <input type="text" id="natureza" placeholder="Natureza da ocorrência" class="save-field">
                         </div>
                         <div class="form-group">
                             <label for="codigo">Código da Ocorrência</label>
-                            <input type="text" id="codigo" placeholder="Código">
+                            <input type="text" id="codigo" placeholder="Código" class="save-field">
                         </div>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
                             <label for="comandante">Comandante da Guarnição</label>
-                            <input type="text" id="comandante" placeholder="Nome, Posto/Grad. e Matrícula">
+                            <input type="text" id="comandante" placeholder="Nome, Posto/Grad. e Matrícula" class="save-field">
                         </div>
                         <div class="form-group">
                             <label for="viatura">Prefixo da Viatura</label>
-                            <input type="text" id="viatura" placeholder="Prefix da viatura">
+                            <input type="text" id="viatura" placeholder="Prefix da viatura" class="save-field">
                         </div>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
                             <label for="motorista">Motorista</label>
-                            <input type="text" id="motorista" placeholder="Nome, Grad. e Matrícula">
+                            <input type="text" id="motorista" placeholder="Nome, Grad. e Matrícula" class="save-field">
                         </div>
                         <div class="form-group">
                             <label for="patrulheiro1">Patrulheiro 01</label>
-                            <input type="text" id="patrulheiro1" placeholder="Nome, Grad. e Matrícula">
+                            <input type="text" id="patrulheiro1" placeholder="Nome, Grad. e Matrícula" class="save-field">
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label for="patrulheiro2">Patrulheiro 02</label>
-                        <input type="text" id="patrulheiro2" placeholder="Nome, Grad. e Matrícula">
+                        <input type="text" id="patrulheiro2" placeholder="Nome, Grad. e Matrícula" class="save-field">
                     </div>
                     
                     <div class="form-group">
                         <label for="solicitante">Solicitante</label>
-                        <input type="text" id="solicitante" placeholder="Nome completo do solicitante">
+                        <input type="text" id="solicitante" placeholder="Nome completo do solicitante" class="save-field">
                     </div>
                     
                     <div class="form-group">
                         <label for="tel-solicitante">Telefone(s) do Solicitante</label>
-                        <input type="text" id="tel-solicitante" placeholder="Número do(s) telefone(s)">
+                        <input type="text" id="tel-solicitante" placeholder="Número do(s) telefone(s)" class="save-field">
                     </div>
                     
                     <div class="form-group">
                         <label for="end-solicitante">Endereço do Solicitante</label>
-                        <input type="text" id="end-solicitante" placeholder="Rua, Nº, Bairro, Cidade e UF">
+                        <input type="text" id="end-solicitante" placeholder="Rua, Nº, Bairro, Cidade e UF" class="save-field">
                     </div>
                 </div>
                 
@@ -676,31 +686,31 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="arma-tipo">Tipo</label>
-                                <input type="text" id="arma-tipo" placeholder="Tipo">
+                                <input type="text" id="arma-tipo" placeholder="Tipo" class="save-field">
                             </div>
                             <div class="form-group">
                                 <label for="arma-marca">Marca</label>
-                                <input type="text" id="arma-marca" placeholder="Marca">
+                                <input type="text" id="arma-marca" placeholder="Marca" class="save-field">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="arma-calibre">Calibre</label>
-                                <input type="text" id="arma-calibre" placeholder="Calibre">
+                                <input type="text" id="arma-calibre" placeholder="Calibre" class="save-field">
                             </div>
                             <div class="form-group">
                                 <label for="arma-acabamento">Acabamento</label>
-                                <input type="text" id="arma-acabamento" placeholder="Acabamento">
+                                <input type="text" id="arma-acabamento" placeholder="Acabamento" class="save-field">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="arma-serie">Nº de Série</label>
-                                <input type="text" id="arma-serie" placeholder="Nº de Série">
+                                <input type="text" id="arma-serie" placeholder="Nº de Série" class="save-field">
                             </div>
                             <div class="form-group">
                                 <label for="arma-cano">Dimensão do Cano</label>
-                                <input type="text" id="arma-cano" placeholder="Dimensão do Cano">
+                                <input type="text" id="arma-cano" placeholder="Dimensão do Cano" class="save-field">
                             </div>
                         </div>
                     </div>
@@ -710,22 +720,22 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="cart-quantidade">Quantidade</label>
-                                <input type="text" id="cart-quantidade" placeholder="Quantidade">
+                                <input type="text" id="cart-quantidade" placeholder="Quantidade" class="save-field">
                             </div>
                             <div class="form-group">
                                 <label for="cart-calibre">Calibre</label>
-                                <input type="text" id="cart-calibre" placeholder="Calibre">
+                                <input type="text" id="cart-calibre" placeholder="Calibre" class="save-field">
                             </div>
                             <div class="form-group">
                                 <label for="cart-tipo">Tipo</label>
-                                <input type="text" id="cart-tipo" placeholder="Tipo">
+                                <input type="text" id="cart-tipo" placeholder="Tipo" class="save-field">
                             </div>
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label for="outros-obj">Outros Objetos Apreendidos</label>
-                        <textarea id="outros-obj" placeholder="Descrição de outros objetos apreendidos"></textarea>
+                        <textarea id="outros-obj" placeholder="Descrição de outros objetos apreendidos" class="save-field"></textarea>
                     </div>
                 </div>
                 
@@ -734,44 +744,44 @@
                     
                     <div class="form-group">
                         <label for="relato" class="required">Relato Detalhado</label>
-                        <textarea id="relato" placeholder="Descreva detalhadamente o ocorrido..." required></textarea>
+                        <textarea id="relato" placeholder="Descreva detalhadamente o ocorrido..." required class="save-field"></textarea>
                     </div>
                     
                     <h4 class="section-title"><i class="fas fa-file-signature"></i> Auto de Resistência à Prisão</h4>
                     
                     <div class="form-group">
                         <label for="auto-matricula">PM Matrícula</label>
-                        <input type="text" id="auto-matricula" placeholder="Matrícula do PM">
+                        <input type="text" id="auto-matricula" placeholder="Matrícula do PM" class="save-field">
                     </div>
                     
                     <div class="form-group">
                         <label for="auto-acusado">Nome do Acusado</label>
-                        <input type="text" id="auto-acusado" placeholder="Nome do acusado">
+                        <input type="text" id="auto-acusado" placeholder="Nome do acusado" class="save-field">
                     </div>
                     
                     <div class="form-group">
                         <label for="auto-crime">Crime/Contravenção</label>
-                        <input type="text" id="auto-crime" placeholder="Descrição do crime/contravenção">
+                        <input type="text" id="auto-crime" placeholder="Descrição do crime/contravenção" class="save-field">
                     </div>
                     
                     <div class="form-group">
                         <label for="auto-meio">Meio Utilizado</label>
-                        <input type="text" id="auto-meio" placeholder="Meio utilizado para contenção">
+                        <input type="text" id="auto-meio" placeholder="Meio utilizado para contenção" class="save-field">
                     </div>
                     
                     <div class="form-group">
                         <label for="auto-resultado">Resultado</label>
-                        <input type="text" id="auto-resultado" placeholder="Resultado da ação">
+                        <input type="text" id="auto-resultado" placeholder="Resultado da ação" class="save-field">
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
                             <label for="auto-test1">1ª Testemunha</label>
-                            <input type="text" id="auto-test1" placeholder="Nome da 1ª testemunha">
+                            <input type="text" id="auto-test1" placeholder="Nome da 1ª testemunha" class="save-field">
                         </div>
                         <div class="form-group">
                             <label for="auto-test2">2ª Testemunha</label>
-                            <input type="text" id="auto-test2" placeholder="Nome da 2ª testemunha">
+                            <input type="text" id="auto-test2" placeholder="Nome da 2ª testemunha" class="save-field">
                         </div>
                     </div>
                 </div>
@@ -808,7 +818,7 @@
         </div>
         
         <footer>
-            <p>Sistema desenvolvido para o 17º Batalhão de Polícia Militar da Paraíba</p>
+            <p>Sistema desenvolvido para a Polícia Militar</p>
             <p>© 2023 - Todos os direitos reservados</p>
         </footer>
     </div>
@@ -1154,6 +1164,10 @@
         // Função para coletar dados do formulário
         function collectFormData() {
             const data = {
+                // Novos campos adicionados
+                comandoRegional: document.getElementById('comando-regional').value,
+                batalhao: document.getElementById('batalhao').value,
+                
                 // Dados principais
                 boNum: document.getElementById('bo-num').value,
                 ciop: document.getElementById('ciop').value,
@@ -1310,6 +1324,10 @@
                 }
                 
                 const data = JSON.parse(savedData);
+                
+                // Carregar NOVOS campos
+                document.getElementById('comando-regional').value = data.comandoRegional || 'COMANDO DE POLICIAMENTO REGIONAL III - CPRIII';
+                document.getElementById('batalhao').value = data.batalhao || '17º BATALHÃO DE POLÍCIA MILITAR';
                 
                 // Carregar dados principais
                 document.getElementById('bo-num').value = data.boNum || '';
@@ -1483,15 +1501,15 @@
             });
         }
         
-        // Função para criar template do PDF - CORRIGIDA
+        // Função para criar template do PDF - ATUALIZADA com novos campos
         function createPDFTemplate(data) {
             let template = `
                 <div style="width: 100%; max-width: 800px; margin: 0 auto; font-family: 'Courier New', monospace; font-size: 9px; line-height: 1.2;">
                     <div style="text-align: center; font-weight: bold; margin-bottom: 10px; font-size: 10px;">
                         SECRETARIA DE ESTADO DA SEGURANÇA PÚBLICA E DA DEFESA SOCIAL<br>
                         POLÍCIA MILITAR<br>
-                        COMANDO DE POLICIAMENTO REGIONAL III - CPRIII<br>
-                        17º BATALHÃO DE POLÍCIA MILITAR
+                        ${data.comandoRegional || 'COMANDO DE POLICIAMENTO REGIONAL III - CPRIII'}<br>
+                        ${data.batalhao || '17º BATALHÃO DE POLÍCIA MILITAR'}
                     </div>
                     
                     <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 9px; line-height: 1.2;">
@@ -1888,6 +1906,10 @@
                 document.getElementById('accused-container').innerHTML = createAccusedRow(1);
                 document.getElementById('victims-container').innerHTML = createVictimRow(1);
                 document.getElementById('witnesses-container').innerHTML = createWitnessRow(1);
+                
+                // Restaurar valores padrão para os novos campos
+                document.getElementById('comando-regional').value = 'COMANDO DE POLICIAMENTO REGIONAL III - CPRIII';
+                document.getElementById('batalhao').value = '17º BATALHÃO DE POLÍCIA MILITAR';
                 
                 localStorage.removeItem(STORAGE_KEY);
                 attachSaveListeners();
