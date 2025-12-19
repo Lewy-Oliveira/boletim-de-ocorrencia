@@ -320,6 +320,10 @@
             border-left-color: #2980b9;
         }
         
+        .weapon-row {
+            border-left-color: #8e44ad;
+        }
+        
         .add-btn {
             background-color: #27ae60;
             color: white;
@@ -347,6 +351,14 @@
         
         .add-btn.accused:hover {
             background-color: #a93226;
+        }
+        
+        .add-btn.weapon {
+            background-color: #8e44ad;
+        }
+        
+        .add-btn.weapon:hover {
+            background-color: #7d3c98;
         }
         
         .remove-btn {
@@ -528,7 +540,7 @@
     <div class="container">
         <header>
             <h1><i class="fas fa-file-contract"></i> Sistema de Boletim de Ocorrência</h1>
-            <p>Polícia Militar - Sistema de Geração de Boletins</p>
+            <p>Sistema de Geração de Boletins</p>
         </header>
         
         <div class="app-content">
@@ -547,12 +559,12 @@
                     
                     <div class="form-group">
                         <label for="comando-regional">Comando de Policiamento Regional</label>
-                        <input type="text" id="comando-regional" placeholder="Ex: COMANDO DE POLICIAMENTO REGIONAL III - CPRIII" required class="save-field" value="COMANDO DE POLICIAMENTO REGIONAL III - CPRIII">
+                        <input type="text" id="comando-regional" placeholder="Ex: COMANDO DE POLICIAMENTO REGIONAL III - CPRIII" required class="save-field" value="">
                     </div>
                     
                     <div class="form-group">
                         <label for="batalhao">Batalhão de Polícia Militar</label>
-                        <input type="text" id="batalhao" placeholder="Ex: 17º BATALHÃO DE POLÍCIA MILITAR" required class="save-field" value="17º BATALHÃO DE POLÍCIA MILITAR">
+                        <input type="text" id="batalhao" placeholder="Ex: 17º BATALHÃO DE POLÍCIA MILITAR" required class="save-field" value="">
                     </div>
                     
                     <div class="form-row">
@@ -683,36 +695,12 @@
                     
                     <div class="form-group">
                         <label>Armas de Fogo Apreendidas</label>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="arma-tipo">Tipo</label>
-                                <input type="text" id="arma-tipo" placeholder="Tipo" class="save-field">
-                            </div>
-                            <div class="form-group">
-                                <label for="arma-marca">Marca</label>
-                                <input type="text" id="arma-marca" placeholder="Marca" class="save-field">
-                            </div>
+                        <div id="weapons-container">
+                            <!-- Armad de fogo serão adicionadas aqui dinamicamente -->
                         </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="arma-calibre">Calibre</label>
-                                <input type="text" id="arma-calibre" placeholder="Calibre" class="save-field">
-                            </div>
-                            <div class="form-group">
-                                <label for="arma-acabamento">Acabamento</label>
-                                <input type="text" id="arma-acabamento" placeholder="Acabamento" class="save-field">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="arma-serie">Nº de Série</label>
-                                <input type="text" id="arma-serie" placeholder="Nº de Série" class="save-field">
-                            </div>
-                            <div class="form-group">
-                                <label for="arma-cano">Dimensão do Cano</label>
-                                <input type="text" id="arma-cano" placeholder="Dimensão do Cano" class="save-field">
-                            </div>
-                        </div>
+                        <button type="button" class="add-btn weapon" id="add-weapon">
+                            <i class="fas fa-plus"></i> Adicionar Arma de Fogo
+                        </button>
                     </div>
                     
                     <div class="form-group">
@@ -831,6 +819,7 @@
         let accusedCount = 0;
         let victimCount = 0;
         let witnessCount = 0;
+        let weaponCount = 0;
         const STORAGE_KEY = 'boletim_ocorrencia_data';
         
         // Função para alternar entre abas
@@ -1114,6 +1103,91 @@
             `;
         }
         
+        // Template para arma de fogo
+        function createWeaponRow(id) {
+            return `
+                <div class="person-row weapon-row" data-id="${id}">
+                    <div class="row-header">
+                        <span class="row-title">Arma de Fogo #${id}</span>
+                        <button type="button" class="remove-btn" onclick="removeWeapon(${id})">
+                            <i class="fas fa-trash"></i> Remover
+                        </button>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="arma-tipo-${id}">Tipo</label>
+                            <select id="arma-tipo-${id}" class="save-field">
+                                <option value="">Selecione o tipo</option>
+                                <option value="Pistola">Pistola</option>
+                                <option value="Revolver">Revolver</option>
+                                <option value="Espingarda">Espingarda</option>
+                                <option value="Fuzil">Fuzil</option>
+                                <option value="Metralhadora">Metralhadora</option>
+                                <option value="Carabina">Carabina</option>
+                                <option value="Garrucha">Garrucha</option>
+                                <option value="Outro">Outro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="arma-marca-${id}">Marca</label>
+                            <input type="text" id="arma-marca-${id}" placeholder="Ex: Taurus, Glock, etc." class="save-field">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="arma-modelo-${id}">Modelo</label>
+                            <input type="text" id="arma-modelo-${id}" placeholder="Modelo da arma" class="save-field">
+                        </div>
+                        <div class="form-group">
+                            <label for="arma-calibre-${id}">Calibre</label>
+                            <input type="text" id="arma-calibre-${id}" placeholder="Ex: .38, 9mm, .40, etc." class="save-field">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="arma-serie-${id}">Nº de Série</label>
+                            <input type="text" id="arma-serie-${id}" placeholder="Número de série" class="save-field">
+                        </div>
+                        <div class="form-group">
+                            <label for="arma-acabamento-${id}">Acabamento</label>
+                            <input type="text" id="arma-acabamento-${id}" placeholder="Ex: Cromada, Fosco, etc." class="save-field">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="arma-cano-${id}">Dimensão do Cano</label>
+                            <input type="text" id="arma-cano-${id}" placeholder="Ex: 4 pol, 5 pol, etc." class="save-field">
+                        </div>
+                        <div class="form-group">
+                            <label for="arma-quantidade-${id}">Quantidade</label>
+                            <input type="number" id="arma-quantidade-${id}" placeholder="1" min="1" value="1" class="save-field">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="arma-estado-${id}">Estado de Conservação</label>
+                        <select id="arma-estado-${id}" class="save-field">
+                            <option value="">Selecione o estado</option>
+                            <option value="Nova">Nova</option>
+                            <option value="Boa">Boa</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Ruim">Ruim</option>
+                            <option value="Inservível">Inservível</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="arma-observacoes-${id}">Observações</label>
+                        <textarea id="arma-observacoes-${id}" placeholder="Observações adicionais sobre a arma" class="save-field" rows="2"></textarea>
+                    </div>
+                </div>
+            `;
+        }
+        
         // Funções para remover elementos
         window.removeAccused = function(id) {
             const element = document.querySelector(`.accused-row[data-id="${id}"]`);
@@ -1139,6 +1213,14 @@
             }
         };
         
+        window.removeWeapon = function(id) {
+            const element = document.querySelector(`.weapon-row[data-id="${id}"]`);
+            if (element) {
+                element.remove();
+                saveToLocalStorage();
+            }
+        };
+        
         // Adicionar novos registros
         document.getElementById('add-accused').addEventListener('click', () => {
             accusedCount++;
@@ -1158,6 +1240,13 @@
             witnessCount++;
             const container = document.getElementById('witnesses-container');
             container.insertAdjacentHTML('beforeend', createWitnessRow(witnessCount));
+            attachSaveListeners();
+        });
+        
+        document.getElementById('add-weapon').addEventListener('click', () => {
+            weaponCount++;
+            const container = document.getElementById('weapons-container');
+            container.insertAdjacentHTML('beforeend', createWeaponRow(weaponCount));
             attachSaveListeners();
         });
         
@@ -1187,13 +1276,7 @@
                 telSolicitante: document.getElementById('tel-solicitante').value,
                 endSolicitante: document.getElementById('end-solicitante').value,
                 
-                // Objetos
-                armaTipo: document.getElementById('arma-tipo').value,
-                armaMarca: document.getElementById('arma-marca').value,
-                armaCalibre: document.getElementById('arma-calibre').value,
-                armaAcabamento: document.getElementById('arma-acabamento').value,
-                armaSerie: document.getElementById('arma-serie').value,
-                armaCano: document.getElementById('arma-cano').value,
+                // Cartuchos
                 cartQuantidade: document.getElementById('cart-quantidade').value,
                 cartCalibre: document.getElementById('cart-calibre').value,
                 cartTipo: document.getElementById('cart-tipo').value,
@@ -1215,11 +1298,13 @@
                 accusedCount: accusedCount,
                 victimCount: victimCount,
                 witnessCount: witnessCount,
+                weaponCount: weaponCount,
                 
-                // Acusados, vítimas, testemunhas
+                // Acusados, vítimas, testemunhas, armas
                 accused: [],
                 victims: [],
-                witnesses: []
+                witnesses: [],
+                weapons: []
             };
             
             // Coletar acusados
@@ -1297,6 +1382,25 @@
                 }
             }
             
+            // Coletar armas de fogo
+            for (let i = 1; i <= weaponCount; i++) {
+                const tipo = document.getElementById(`arma-tipo-${i}`);
+                if (tipo) {
+                    data.weapons.push({
+                        tipo: tipo.value,
+                        marca: document.getElementById(`arma-marca-${i}`)?.value || "",
+                        modelo: document.getElementById(`arma-modelo-${i}`)?.value || "",
+                        calibre: document.getElementById(`arma-calibre-${i}`)?.value || "",
+                        serie: document.getElementById(`arma-serie-${i}`)?.value || "",
+                        acabamento: document.getElementById(`arma-acabamento-${i}`)?.value || "",
+                        cano: document.getElementById(`arma-cano-${i}`)?.value || "",
+                        quantidade: document.getElementById(`arma-quantidade-${i}`)?.value || "1",
+                        estado: document.getElementById(`arma-estado-${i}`)?.value || "",
+                        observacoes: document.getElementById(`arma-observacoes-${i}`)?.value || ""
+                    });
+                }
+            }
+            
             return data;
         }
         
@@ -1326,8 +1430,8 @@
                 const data = JSON.parse(savedData);
                 
                 // Carregar NOVOS campos
-                document.getElementById('comando-regional').value = data.comandoRegional || 'COMANDO DE POLICIAMENTO REGIONAL III - CPRIII';
-                document.getElementById('batalhao').value = data.batalhao || '17º BATALHÃO DE POLÍCIA MILITAR';
+                document.getElementById('comando-regional').value = data.comandoRegional || '';
+                document.getElementById('batalhao').value = data.batalhao || '';
                 
                 // Carregar dados principais
                 document.getElementById('bo-num').value = data.boNum || '';
@@ -1347,12 +1451,6 @@
                 document.getElementById('solicitante').value = data.solicitante || '';
                 document.getElementById('tel-solicitante').value = data.telSolicitante || '';
                 document.getElementById('end-solicitante').value = data.endSolicitante || '';
-                document.getElementById('arma-tipo').value = data.armaTipo || '';
-                document.getElementById('arma-marca').value = data.armaMarca || '';
-                document.getElementById('arma-calibre').value = data.armaCalibre || '';
-                document.getElementById('arma-acabamento').value = data.armaAcabamento || '';
-                document.getElementById('arma-serie').value = data.armaSerie || '';
-                document.getElementById('arma-cano').value = data.armaCano || '';
                 document.getElementById('cart-quantidade').value = data.cartQuantidade || '';
                 document.getElementById('cart-calibre').value = data.cartCalibre || '';
                 document.getElementById('cart-tipo').value = data.cartTipo || '';
@@ -1370,11 +1468,13 @@
                 document.getElementById('accused-container').innerHTML = '';
                 document.getElementById('victims-container').innerHTML = '';
                 document.getElementById('witnesses-container').innerHTML = '';
+                document.getElementById('weapons-container').innerHTML = '';
                 
                 // Restaurar contadores
                 accusedCount = data.accusedCount || 0;
                 victimCount = data.victimCount || 0;
                 witnessCount = data.witnessCount || 0;
+                weaponCount = data.weaponCount || 0;
                 
                 // Restaurar acusados
                 if (data.accused && data.accused.length > 0) {
@@ -1454,6 +1554,25 @@
                     });
                 }
                 
+                // Restaurar armas de fogo
+                if (data.weapons && data.weapons.length > 0) {
+                    data.weapons.forEach((weapon, index) => {
+                        weaponCount = Math.max(weaponCount, index + 1);
+                        document.getElementById('weapons-container').insertAdjacentHTML('beforeend', createWeaponRow(index + 1));
+                        
+                        document.getElementById(`arma-tipo-${index + 1}`).value = weapon.tipo || '';
+                        document.getElementById(`arma-marca-${index + 1}`).value = weapon.marca || '';
+                        document.getElementById(`arma-modelo-${index + 1}`).value = weapon.modelo || '';
+                        document.getElementById(`arma-calibre-${index + 1}`).value = weapon.calibre || '';
+                        document.getElementById(`arma-serie-${index + 1}`).value = weapon.serie || '';
+                        document.getElementById(`arma-acabamento-${index + 1}`).value = weapon.acabamento || '';
+                        document.getElementById(`arma-cano-${index + 1}`).value = weapon.cano || '';
+                        document.getElementById(`arma-quantidade-${index + 1}`).value = weapon.quantidade || '1';
+                        document.getElementById(`arma-estado-${index + 1}`).value = weapon.estado || '';
+                        document.getElementById(`arma-observacoes-${index + 1}`).value = weapon.observacoes || '';
+                    });
+                }
+                
                 // Se não houver nenhum registro, criar um vazio
                 if (accusedCount === 0) {
                     accusedCount = 1;
@@ -1466,6 +1585,10 @@
                 if (witnessCount === 0) {
                     witnessCount = 1;
                     document.getElementById('witnesses-container').innerHTML = createWitnessRow(1);
+                }
+                if (weaponCount === 0) {
+                    weaponCount = 1;
+                    document.getElementById('weapons-container').innerHTML = createWeaponRow(1);
                 }
                 
                 attachSaveListeners();
@@ -1508,8 +1631,8 @@
                     <div style="text-align: center; font-weight: bold; margin-bottom: 10px; font-size: 10px;">
                         SECRETARIA DE ESTADO DA SEGURANÇA PÚBLICA E DA DEFESA SOCIAL<br>
                         POLÍCIA MILITAR<br>
-                        ${data.comandoRegional || 'COMANDO DE POLICIAMENTO REGIONAL III - CPRIII'}<br>
-                        ${data.batalhao || '17º BATALHÃO DE POLÍCIA MILITAR'}
+                        ${data.comandoRegional || ''}<br>
+                        ${data.batalhao || ''}
                     </div>
                     
                     <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 9px; line-height: 1.2;">
@@ -1666,22 +1789,45 @@
                 </table>`;
             }
             
-            // Objetos apreendidos
-            template += `
-                <div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">ARMA(S) DE FOGO APREENDIDA(S)</div>
+            // Armad de fogo apreendidas
+            if (data.weapons.length > 0) {
+                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">ARMA(S) DE FOGO APREENDIDA(S)</div>`;
+                
+                data.weapons.forEach((weapon, idx) => {
+                    const quantidade = weapon.quantidade || "1";
+                    template += `
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 2px; width: 20%;"><strong>Tipo:</strong> ${weapon.tipo || ''}</td>
+                                <td style="border: 1px solid #000; padding: 2px; width: 20%;"><strong>Marca:</strong> ${weapon.marca || ''}</td>
+                                <td style="border: 1px solid #000; padding: 2px; width: 20%;"><strong>Modelo:</strong> ${weapon.modelo || ''}</td>
+                                <td style="border: 1px solid #000; padding: 2px; width: 20%;"><strong>Calibre:</strong> ${weapon.calibre || ''}</td>
+                                <td style="border: 1px solid #000; padding: 2px; width: 20%;"><strong>Qtd:</strong> ${quantidade}</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 2px;"><strong>Nº de Série:</strong> ${weapon.serie || ''}</td>
+                                <td style="border: 1px solid #000; padding: 2px;"><strong>Acabamento:</strong> ${weapon.acabamento || ''}</td>
+                                <td style="border: 1px solid #000; padding: 2px;"><strong>Cano:</strong> ${weapon.cano || ''}</td>
+                                <td style="border: 1px solid #000; padding: 2px;"><strong>Estado:</strong> ${weapon.estado || ''}</td>
+                                <td style="border: 1px solid #000; padding: 2px;" rowspan="2"><strong>Obs:</strong> ${weapon.observacoes || ''}</td>
+                            </tr>
+                        </table>
+                    `;
+                });
+            } else {
+                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">ARMA(S) DE FOGO APREENDIDA(S)</div>
                 <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
                     <tr>
-                        <td style="border: 1px solid #000; padding: 2px; width: 25%;"><strong>Tipo:</strong> ${data.armaTipo || ''}</td>
-                        <td style="border: 1px solid #000; padding: 2px; width: 25%;"><strong>Marca:</strong> ${data.armaMarca || ''}</td>
-                        <td style="border: 1px solid #000; padding: 2px; width: 25%;"><strong>Calibre:</strong> ${data.armaCalibre || ''}</td>
-                        <td style="border: 1px solid #000; padding: 2px; width: 25%;"><strong>Acabamento:</strong> ${data.armaAcabamento || ''}</td>
+                        <td style="border: 1px solid #000; padding: 2px; width: 25%;"><strong>Tipo:</strong> _________________</td>
+                        <td style="border: 1px solid #000; padding: 2px; width: 25%;"><strong>Marca:</strong> _________________</td>
+                        <td style="border: 1px solid #000; padding: 2px; width: 25%;"><strong>Calibre:</strong> _________________</td>
+                        <td style="border: 1px solid #000; padding: 2px; width: 25%;"><strong>Nº Série:</strong> _________________</td>
                     </tr>
-                    <tr>
-                        <td style="border: 1px solid #000; padding: 2px;"><strong>Nº de Série:</strong> ${data.armaSerie || ''}</td>
-                        <td colspan="3" style="border: 1px solid #000; padding: 2px;"><strong>Dimensão do Cano:</strong> ${data.armaCano || ''}</td>
-                    </tr>
-                </table>
-                
+                </table>`;
+            }
+            
+            // Cartuchos apreendidos
+            template += `
                 <div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">CARTUCHO(S) APREENDIDO(S)</div>
                 <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
                     <tr>
@@ -1894,22 +2040,26 @@
                 document.getElementById('accused-container').innerHTML = '';
                 document.getElementById('victims-container').innerHTML = '';
                 document.getElementById('witnesses-container').innerHTML = '';
+                document.getElementById('weapons-container').innerHTML = '';
                 
                 accusedCount = 0;
                 victimCount = 0;
                 witnessCount = 0;
+                weaponCount = 0;
                 
                 accusedCount = 1;
                 victimCount = 1;
                 witnessCount = 1;
+                weaponCount = 1;
                 
                 document.getElementById('accused-container').innerHTML = createAccusedRow(1);
                 document.getElementById('victims-container').innerHTML = createVictimRow(1);
                 document.getElementById('witnesses-container').innerHTML = createWitnessRow(1);
+                document.getElementById('weapons-container').innerHTML = createWeaponRow(1);
                 
                 // Restaurar valores padrão para os novos campos
-                document.getElementById('comando-regional').value = 'COMANDO DE POLICIAMENTO REGIONAL III - CPRIII';
-                document.getElementById('batalhao').value = '17º BATALHÃO DE POLÍCIA MILITAR';
+                document.getElementById('comando-regional').value = '';
+                document.getElementById('batalhao').value = '';
                 
                 localStorage.removeItem(STORAGE_KEY);
                 attachSaveListeners();
@@ -1923,10 +2073,12 @@
             accusedCount = 1;
             victimCount = 1;
             witnessCount = 1;
+            weaponCount = 1;
             
             document.getElementById('accused-container').innerHTML = createAccusedRow(1);
             document.getElementById('victims-container').innerHTML = createVictimRow(1);
             document.getElementById('witnesses-container').innerHTML = createWitnessRow(1);
+            document.getElementById('weapons-container').innerHTML = createWeaponRow(1);
             
             attachSaveListeners();
             
