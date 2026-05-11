@@ -1627,7 +1627,7 @@
         // Função para criar template do PDF - ATUALIZADA com novos campos
         function createPDFTemplate(data) {
             let template = `
-                <div style="width: 100%; max-width: 800px; margin: 0 auto; font-family: 'Courier New', monospace; font-size: 9px; line-height: 1.2;">
+                <div style="width: 100%; max-width: 800px; margin: 0 auto; font-family: 'Courier New', monospace; font-size: 11px; line-height: 1.2;">
     <!-- Container flex para imagem e texto lado a lado -->
     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
         <!-- Imagem -->
@@ -1654,7 +1654,7 @@
     <!-- Resto do seu conteúdo aqui -->
 </div>
                     
-                    <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 9px; line-height: 1.2;">
+                    <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 11px; line-height: 1.2;">
                         <tr>
                             <td style="border: 1px solid #000; padding: 2px; width: 50%;"><strong>BOLETIM DE OCORRÊNCIA Nº</strong> ${data.boNum || '_________'}</td>
                             <td style="border: 1px solid #000; padding: 2px; width: 50%;"><strong>Nº CIOP:</strong> ${data.ciop || '_________'}</td>
@@ -1695,13 +1695,13 @@
             
             // Acusados
             if (data.accused.length > 0) {
-                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">ACUSADO(S)</div>`;
+                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 11px;">ACUSADO(S)</div>`;
                 
                 data.accused.forEach((acc, idx) => {
                     const marcasText = acc.marcas + (acc.outrosMarcas ? ` - ${acc.outrosMarcas}` : '');
                     
                     template += `
-                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 11px; line-height: 1.2;">
                             <tr>
                                 <td style="border: 1px solid #000; padding: 2px; width: 50%;"><strong>Nome Completo:</strong> ${acc.nome || ''}</td>
                                 <td style="border: 1px solid #000; padding: 2px; width: 50%;"><strong>Data de Nascimento:</strong> ${formatDate(acc.nascimento) || ''}</td>
@@ -1735,19 +1735,19 @@
                     `;
                 });
             } else {
-                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">ACUSADO(S)</div>
-                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 11px;">ACUSADO(S)</div>
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 11px; line-height: 1.2;">
                     <tr><td style="border: 1px solid #000; padding: 2px;"><strong>Nome Completo:</strong> ___________________________</td></tr>
                 </table>`;
             }
             
             // Vítimas
             if (data.victims.length > 0) {
-                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">VÍTIMA(S)</div>`;
+                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 11px;">VÍTIMA(S)</div>`;
                 
                 data.victims.forEach((vit, idx) => {
                     template += `
-                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 11px; line-height: 1.2;">
                             <tr>
                                 <td style="border: 1px solid #000; padding: 2px; width: 50%;"><strong>Nome Completo:</strong> ${vit.nome || ''}</td>
                                 <td style="border: 1px solid #000; padding: 2px; width: 50%;"><strong>Data de Nascimento:</strong> ${formatDate(vit.nascimento) || ''}</td>
@@ -1770,19 +1770,19 @@
                     `;
                 });
             } else {
-                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">VÍTIMA(S)</div>
-                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 11px;">VÍTIMA(S)</div>
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 11px; line-height: 1.2;">
                     <tr><td style="border: 1px solid #000; padding: 2px;"><strong>Nome Completo:</strong> ___________________________</td></tr>
                 </table>`;
             }
             
             // Testemunhas
             if (data.witnesses.length > 0) {
-                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">TESTEMUNHA(S)</div>`;
+                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 11px;">TESTEMUNHA(S)</div>`;
                 
                 data.witnesses.forEach((test, idx) => {
                     template += `
-                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 11px; line-height: 1.2;">
                             <tr>
                                 <td style="border: 1px solid #000; padding: 2px; width: 50%;"><strong>Nome Completo:</strong> ${test.nome || ''}</td>
                                 <td style="border: 1px solid #000; padding: 2px; width: 50%;"><strong>Data de Nascimento:</strong> ${formatDate(test.nascimento) || ''}</td>
@@ -1802,20 +1802,20 @@
                     `;
                 });
             } else {
-                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">TESTEMUNHA(S)</div>
-                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 11px;">TESTEMUNHA(S)</div>
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 11px; line-height: 1.2;">
                     <tr><td style="border: 1px solid #000; padding: 2px;"><strong>Nome Completo:</strong> ___________________________</td></tr>
                 </table>`;
             }
             
             // Armad de fogo apreendidas
             if (data.weapons.length > 0) {
-                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">ARMA(S) DE FOGO APREENDIDA(S)</div>`;
+                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 11px;">ARMA(S) DE FOGO APREENDIDA(S)</div>`;
                 
                 data.weapons.forEach((weapon, idx) => {
                     const quantidade = weapon.quantidade || "1";
                     template += `
-                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 11px; line-height: 1.2;">
                             <tr>
                                 <td style="border: 1px solid #000; padding: 2px; width: 20%;"><strong>Tipo:</strong> ${weapon.tipo || ''}</td>
                                 <td style="border: 1px solid #000; padding: 2px; width: 20%;"><strong>Marca:</strong> ${weapon.marca || ''}</td>
@@ -1834,8 +1834,8 @@
                     `;
                 });
             } else {
-                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">ARMA(S) DE FOGO APREENDIDA(S)</div>
-                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                template += `<div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 11px;">ARMA(S) DE FOGO APREENDIDA(S)</div>
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 11px; line-height: 1.2;">
                     <tr>
                         <td style="border: 1px solid #000; padding: 2px; width: 25%;"><strong>Tipo:</strong> _________________</td>
                         <td style="border: 1px solid #000; padding: 2px; width: 25%;"><strong>Marca:</strong> _________________</td>
@@ -1847,8 +1847,8 @@
             
             // Cartuchos apreendidos
             template += `
-                <div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">CARTUCHO(S) APREENDIDO(S)</div>
-                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                <div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 11px;">CARTUCHO(S) APREENDIDO(S)</div>
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 11px; line-height: 1.2;">
                     <tr>
                         <td style="border: 1px solid #000; padding: 2px; width: 33%;"><strong>Quantidade:</strong> ${data.cartQuantidade || ''}</td>
                         <td style="border: 1px solid #000; padding: 2px; width: 33%;"><strong>Calibre:</strong> ${data.cartCalibre || ''}</td>
@@ -1856,25 +1856,25 @@
                     </tr>
                 </table>
                 
-                <div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">OUTRO(S) OBJETO(S) APREENDIDO(S)</div>
-                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                <div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 11px;">OUTRO(S) OBJETO(S) APREENDIDO(S)</div>
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 11px; line-height: 1.2;">
                     <tr><td style="border: 1px solid #000; padding: 2px;">${data.outrosObj || ''}</td></tr>
                 </table>
                 
-                <div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">RELATO DA OCORRÊNCIA</div>
-                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                <div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 11px;">RELATO DA OCORRÊNCIA</div>
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 11px; line-height: 1.2;">
                     <tr><td style="border: 1px solid #000; padding: 5px; min-height: 80px; vertical-align: top;">${data.relato || ''}</td></tr>
                 </table>
                 
-                <div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">AUTO DE RESISTENCIA A PRISÃO</div>
-                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                <div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 11px;">AUTO DE RESISTENCIA A PRISÃO</div>
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 11px; line-height: 1.2;">
                     <tr><td style="border: 1px solid #000; padding: 5px;">
                         No Exercício legal de minha função policial, abordei e dei voz de prisão ao acusado ${data.autoAcusado || ''}, por ter encontrado o mesmo em flagrante delito de crime e/ou contravenção penal de ${data.autoCrime || ''} e, porque o infrator não obedecesse, antes resistisse à prisão, apesar das advertências que lhe fiz, foi necessário o uso da força moderada e progressiva, empregando para isso ${data.autoMeio || ''}, do que resultou em ${data.autoResultado || ''}. Para constar, lavro o presente Auto de Resistência à Prisão, que assino com a(s) Testemunha(s) ${data.autoTest1 || ''} e ${data.autoTest2 || ''}.
                     </td></tr>
                 </table>
                 
-                <div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 9px;">R E C I B O</div>
-                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 9px; line-height: 1.2;">
+                <div style="font-weight: bold; background-color: #f0f0f0; border: 1px solid #000; padding: 2px; margin-top: 5px; text-align: center; font-size: 11px;">R E C I B O</div>
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 2px; font-size: 11px; line-height: 1.2;">
                     <tr><td style="border: 1px solid #000; padding: 5px;">
                         Recebi às ______ h ______ min., de ___/___/____, os Acusado(s), Arma(s) e/ou objetos descritos neste documento.<br><br>
                         Nome: ____________________ Matrícula ____________________ Assinatura ____________________
