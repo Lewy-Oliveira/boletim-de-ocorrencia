@@ -94,9 +94,9 @@
             </div>
             <div>
                 <h1 class="text-base font-bold tracking-tight text-white flex items-center gap-2">
-                    POLÍCIA MILITAR DA PARAÍBA <span class="text-[9px] bg-red-600 text-white px-2 py-0.5 rounded font-black">SBO v2.8</span>
+                    SISTEMA DE BOLETIM DE OCORRÊNCIA <span class="text-[9px] bg-red-600 text-white px-2 py-0.5 rounded font-black">SBO v2.8</span>
                 </h1>
-                <p class="text-xs text-slate-400">Emissão de Boletins Padronizados e Fidedignos</p>
+                <p class="text-xs text-slate-400">Emissão de Boletins Padronizados</p>
             </div>
         </div>
         
@@ -145,14 +145,14 @@
             <!-- Conteúdo das Abas -->
             <div class="p-5 overflow-y-auto flex-1 space-y-6">
                 
-                <!-- ABA: Dados Principais -->
+                <!-- ABA: Dados Principais (Fixa, Sem adicionar/remover) -->
                 <div id="tab-main" class="tab-pane block space-y-4">
                     <h3 class="text-xs font-bold text-amber-500 uppercase tracking-wider border-b border-slate-800 pb-1.5"><i class="fas fa-id-card mr-2"></i>Cabeçalho de Identificação</h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-[10px] font-semibold text-slate-400 mb-1">Comando / Unidade Principal</label>
-                            <input type="text" id="in-comando" class="form-input w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-500 transition" placeholder="Ex: ESTADO DA PARAÍBA">
+                            <label class="block text-[10px] font-semibold text-slate-400 mb-1">Comando Regional <span class="text-red-500 font-bold">*</span></label>
+                            <input type="text" id="in-comando" class="form-input w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-500 transition" placeholder="Ex: CPR I ou CPRM">
                         </div>
                         <div>
                             <label class="block text-[10px] font-semibold text-slate-400 mb-1">Batalhão / Companhia</label>
@@ -162,7 +162,7 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-[10px] font-semibold text-slate-400 mb-1">Nº do Boletim de Ocorrência</label>
+                            <label class="block text-[10px] font-semibold text-slate-400 mb-1">Nº do Boletim de Ocorrência <span class="text-red-500 font-bold">*</span></label>
                             <input type="text" id="in-bo-num" class="form-input w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-500 transition">
                         </div>
                         <div>
@@ -177,7 +177,7 @@
                             <input type="text" id="in-uop" class="form-input w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-500 transition">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-semibold text-slate-400 mb-1">Data da Ocorrência</label>
+                            <label class="block text-[10px] font-semibold text-slate-400 mb-1">Data da Ocorrência <span class="text-red-500 font-bold">*</span></label>
                             <input type="date" id="in-data" class="form-input w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-100 focus:outline-none">
                         </div>
                         <div>
@@ -320,7 +320,7 @@
                     
                     <div>
                         <label class="block text-xs font-semibold text-slate-400 mb-1 flex justify-between items-center">
-                            <span>Histórico Minucioso dos Fatos</span>
+                            <span>Histórico Minucioso dos Fatos <span class="text-red-500 font-bold">*</span></span>
                             <span class="text-[10px] text-slate-500">Clique no microfone para ditar</span>
                         </label>
                         <div class="relative">
@@ -458,17 +458,17 @@
             
             acusados: [
                 {
-                    nome: 'JAILTON TARGINO DOS SANTOS',
-                    nascimento: '2006-05-01',
-                    mae: 'LIDIANE TARGINO DE SOUZA',
-                    rg: '5.210.518',
-                    cpf: '158.004.394-19',
-                    endereco: 'RUA JOSÉ MENEZES LIRA, MANJERICÃO, SN',
+                    nome: '',
+                    nascimento: '',
+                    mae: '',
+                    rg: '',
+                    cpf: '',
+                    endereco: '',
                     cnh: 'xxxxxxxxxxxxxxxx',
-                    ponto_ref: 'Próximo a igreja',
+                    ponto_ref: '',
                     profissao: 'XXXXXXXXXXXXXXXX',
-                    alcunha: 'Psicopata ou Salsicha',
-                    biometria: 'Normal',
+                    alcunha: '',
+                    biometria: '',
                     tatuagem: true,
                     cicatriz: false,
                     sinal: false,
@@ -509,8 +509,8 @@
             cart_cal: '',
             cart_tipo: '',
 
-            outros_objetos: '-1 CELULAR LG PRATA\n-1 CARREGADOR\n-110 PINOS DE SUBSTANCIA SIMILAR AO ENTORPECENTE COCAINA\n-26 INVÓLUCROS DE SUBSTÂNCIA SIMILIAR AO ENTORPECENTE MACONHA',
-            relatorio_minucioso: 'Por volta das 22 horas e 30 minutos, durante patrulhamento na cidade de Mataraca, as equipes policiais do BPCHOQUE visualizaram 3 indivíduos que caminhavam em direção a praça 8 de março, no centro da cidade, nesse cenário, foi visualizado com um deles um volume na cintura, e com outro um volume nas mãos, desse modo, as equipes se aproximaram, e ao iniciar os procedimentos de abordagem o indivíduo que estava com o volume in-mãos começou a correr, não sendo mais alcançado, enquanto os outros dois se mantiveram no local.\n\nAssim, foram realizadas buscas pessoais e processuais, sendo encontrado com um dos dois, o JAILTON TARGINO DOS SANTOS, uma embalagem na cintura, onde ele portava a quantidade de drogas citadas: 110 PINOS DE SUBSTANCIA SIMILAR AO ENTORPECENTE COCAINA, e 26 INVÓLUCROS DE SUBSTÂNCIA SIMILIAR AO ENTORPECENTE MACONHA. Ainda, na busca processual também foi visualizado que o mesmo havia sido preso recentemente com uma arma de fogo, há cerca de 15 dias. Dessa forma, sendo questionado sobre a droga que portava, o individuo informou que seria usada para vender nas proximidades da praça 8 de março.\n\nDesse modo, o JAILTON TARGINO DOS SANTOS foi conduzido para a delegacia de policia civil da cidade de Mamanguape, enquanto o outro individuo, com o qual não foi encontrado nenhum ilícito, foi liberado no local.',
+            outros_objetos: '',
+            relatorio_minucioso: '',
             
             auto_acusado: '',
             auto_crime: '',
@@ -985,7 +985,6 @@
         function compilePreview() {
             // Desenho do cabeçalho de imagens com comentários explícitos para inserção do Base64
             const headerGovernmentImage = `
-                
                 <!-- ADICIONE SEU BASE64 DO GOVERNO DA PARAIBA AQUI -->
                 <img src="${BASE64_GOVERNO}" alt="Governo da Paraíba" style="max-height: 48px; max-width: 140px; display: inline-block; vertical-align: middle;" onerror="this.style.display='none'">
             `;
@@ -1003,9 +1002,10 @@
                             ${headerGovernmentImage}
                         </td>
                         <td style="width: 34%; text-align: center; vertical-align: middle; border: none; font-family: 'Times New Roman', serif; padding-bottom: 12px;">
-                            <h2 style="font-size: 13px; font-weight: bold; margin: 0; text-transform: uppercase;">ESTADO DA PARAÍBA</h2>
-                            <h3 style="font-size: 10px; font-weight: bold; margin: 1px 0;">POLICIAL MILITAR</h3>
-                            <h3 style="font-size: 11px; font-weight: bold; margin: 0; text-transform: uppercase;">${state.batalhao || ''}</h3>
+                            <h2 style="font-size: 13px; font-weight: bold; margin: 0; text-transform: uppercase; line-height: 1.2;">ESTADO DA PARAÍBA</h2>
+                            <h3 style="font-size: 10px; font-weight: bold; margin: 1px 0; text-transform: uppercase; line-height: 1.2;">POLÍCIA MILITAR</h3>
+                            <h3 style="font-size: 10px; font-weight: bold; margin: 1px 0; text-transform: uppercase; line-height: 1.2;">${state.comando ? state.comando.toUpperCase() : 'COMANDO OPERACIONAL'}</h3>
+                            <h3 style="font-size: 11px; font-weight: bold; margin: 0; text-transform: uppercase; line-height: 1.2;">${state.batalhao ? state.batalhao.toUpperCase() : 'BATALHÃO / UNIDADE'}</h3>
                         </td>
                         <td style="width: 33%; text-align: right; vertical-align: middle; border: none; padding-bottom: 12px;">
                             ${headerPMPBImage}
@@ -1103,7 +1103,7 @@
                         <table class="military-table" style="margin-top: 4px; border: 1px solid #000;">
                             <tr>
                                 <td style="width: 75%; border: 1px solid #000;"><strong>ACUSADO #${idx + 1} - NOME COMPLETO:</strong> ${parseField(ac.nome)}</td>
-                                <td style="width: 25%; border: 1px solid #000; white-space: nowrap;"><strong>DATA DE NASCIMENTO:</strong> ${parseField(formatDate(ac.nascimento))}</td>
+                                <td style="width: 25%; border: 1px solid #000;"><strong>DATA DE NASCIMENTO:</strong> ${parseField(formatDate(ac.nascimento))}</td>
                             </tr>
                             <tr>
                                 <td style="width: 45%; border: 1px solid #000;"><strong>NOME COMPLETO DA GENITORA:</strong> ${parseField(ac.mae)}</td>
@@ -1147,7 +1147,7 @@
                         <table class="military-table" style="margin-top: 2px; border: 1px solid #000;">
                             <tr>
                                 <td style="width: 75%; border: 1px solid #000;"><strong>VÍTIMA #${idx + 1} - NOME COMPLETO:</strong> ${parseField(vt.nome)}</td>
-                                <td style="width: 25%; border: 1px solid #000; white-space: nowrap;"><strong>DATA DE NASCIMENTO:</strong> ${parseField(formatDate(vt.nascimento))}</td>
+                                <td style="width: 25%; border: 1px solid #000;"><strong>DATA DE NASCIMENTO:</strong> ${parseField(formatDate(vt.nascimento))}</td>
                             </tr>
                             <tr>
                                 <td style="width: 45%; border: 1px solid #000;"><strong>NOME COMPLETO DA GENITORA:</strong> ${parseField(vt.mae)}</td>
@@ -1305,6 +1305,11 @@
                 auto_acusado: '', auto_crime: '', auto_meio: '', auto_resultado: ''
             };
             
+            // Remove estilos de erro
+            document.querySelectorAll('.form-input').forEach(input => {
+                input.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
+            });
+
             populateFixedFields();
             renderAcusados();
             renderVitimas();
@@ -1409,7 +1414,11 @@
         // Liga ouvintes de input em campos fixos
         function attachFixedListeners() {
             document.querySelectorAll('.form-input').forEach(elem => {
-                elem.addEventListener('input', () => {
+                elem.addEventListener('input', (e) => {
+                    // Remove estilo de erro dinamicamente se o usuário digitar algo
+                    if (e.target.value.trim() !== '') {
+                        e.target.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
+                    }
                     clearTimeout(window.saveTimeout);
                     window.saveTimeout = setTimeout(saveToDraft, 600);
                 });
@@ -1418,6 +1427,49 @@
 
         // Exportação especializada do A4 mantendo a fidelidade estrutural
         async function buildPDF() {
+            // Validação de Campos Obrigatórios
+            const requiredFields = [
+                { id: 'in-comando', name: 'Comando Regional', tab: 'tab-main' },
+                { id: 'in-bo-num', name: 'Nº do Boletim de Ocorrência', tab: 'tab-main' },
+                { id: 'in-data', name: 'Data da Ocorrência', tab: 'tab-main' },
+                { id: 'in-relatorio-minucioso', name: 'Histórico Minucioso dos Fatos', tab: 'tab-report' }
+            ];
+
+            let hasErrors = false;
+            let firstErrorField = null;
+
+            requiredFields.forEach(field => {
+                const inputElement = document.getElementById(field.id);
+                if (inputElement) {
+                    if (!inputElement.value || inputElement.value.trim() === '') {
+                        inputElement.classList.add('border-red-500', 'ring-1', 'ring-red-500');
+                        hasErrors = true;
+                        if (!firstErrorField) {
+                            firstErrorField = field;
+                        }
+                    } else {
+                        inputElement.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
+                    }
+                }
+            });
+
+            if (hasErrors) {
+                showToast(`Preencha todos os campos obrigatórios (*) antes de gerar o PDF.`, true);
+                
+                // Mudar para a aba do primeiro erro
+                if (firstErrorField) {
+                    const tabBtn = document.querySelector(`[data-tab="${firstErrorField.tab}"]`);
+                    if (tabBtn) {
+                        tabBtn.click();
+                        setTimeout(() => {
+                            const elem = document.getElementById(firstErrorField.id);
+                            if (elem) elem.focus();
+                        }, 100);
+                    }
+                }
+                return;
+            }
+
             showToast("Iniciando compilação do PDF Oficial...");
             const btn = document.getElementById('btn-generate-pdf');
             const originalText = btn.innerHTML;
@@ -1486,8 +1538,7 @@
         document.getElementById('btn-generate-pdf').addEventListener('click', buildPDF);
         document.getElementById('btn-fill-example').addEventListener('click', fillWithExample);
         document.getElementById('btn-clear-form').addEventListener('click', () => {
-            // Utiliza o toast customizado para requisições importantes no lugar de confirmações nativas do sistema
-            if (state.bo_num || state.solicitante) {
+            if (state.bo_num || state.solicitante || state.comando) {
                 clearAllFields();
             } else {
                 showToast("Os campos já estão limpos e prontos para uso.");
